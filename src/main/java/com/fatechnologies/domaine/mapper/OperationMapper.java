@@ -16,7 +16,7 @@ public interface OperationMapper {
 		@Mapping(target = "clientId", source = "client.id"),
 		@Mapping(target = "clientLastname", source = "client.lastname"),
 		@Mapping(target = "clientFirstname", source = "client.firstname"),
-		@Mapping(target = "clientVilleLabel", source = "client.ville.label"),
+		@Mapping(target = "clientCityLabel", source = "client.city.label"),
 	})
 	OperationDto modelToDto(final OperationEntity source);
 	List<OperationDto> modelToDto(final List<OperationEntity> sources);

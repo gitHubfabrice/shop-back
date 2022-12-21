@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties
 @EqualsAndHashCode(of = { "id" })
-public class VilleDto {
+public class CityDto {
 
 	private Long id;
 	private String code;

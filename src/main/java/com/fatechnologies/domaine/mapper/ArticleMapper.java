@@ -2,7 +2,6 @@ package com.fatechnologies.domaine.mapper;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.entity.ArticleEntity;
-import com.fatechnologies.domaine.entity.ArticleOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -22,5 +21,4 @@ public interface ArticleMapper {
 	    @Mapping(target = "category.label", source = "dto.categoryLabel")
 })
     ArticleEntity dtoToModel(final ArticleDto dto);
-	List<ArticleDto> dtoTomodeles(final List<ArticleOrder> dtos);
 }

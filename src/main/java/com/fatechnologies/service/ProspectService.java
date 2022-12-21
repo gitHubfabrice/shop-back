@@ -8,10 +8,7 @@ import java.util.List;
 public interface ProspectService {
 	
 	ProspectDto getById(Long id);
-	ProspectDto create(ProspectDto prospect);
-	ProspectDto update(ProspectDto prospect);
+	void save(ProspectDto prospect);
 	void delete(Long id);
 	List<ProspectDto> getAll();
-	int max();
-	int nbre();
 }

@@ -25,30 +25,13 @@ public class ProspectController {
 	private ProspectService prospectService;
 
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ProspectDto> create(@RequestBody ProspectDto prospect) {
-
-		ProspectDto prospecDto = prospectService.create(prospect);
-
-		return ResponseEntity.ok().body(prospecDto);
-	}
-	
-	@GetMapping(value = "/get-code", produces = MediaType.APPLICATION_JSON_VALUE)
-	public int getCode() {
-		int x = prospectService.nbre();
-
-		if (x == 0) {
-			return 0;
-		}
-
-		return prospectService.max();
+	public void create(@RequestBody ProspectDto prospect) {
+		 prospectService.save(prospect);
 	}
 
 	@PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ProspectDto> update(@RequestBody ProspectDto prospect) {
-
-		ProspectDto prospectDto = prospectService.update(prospect);
-
-		return ResponseEntity.ok().body(prospectDto);
+	public void update(@RequestBody ProspectDto prospect) {
+		prospectService.save(prospect);
 	}
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ProspectDto>> getAllProspect() {
@@ -57,23 +40,7 @@ public class ProspectController {
 
 		return ResponseEntity.ok().body(prospects);
 	}
-	
-//	@GetMapping(value = "/search-code/{searchCodeStr}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity getProspect(@PathVariable("searchCodeStr")String searchCodeStr) {
-//
-//		ProspectDto prospect = prospectService.prospectByCode(searchCodeStr);
-//
-//		return ResponseEntity.ok().body(prospect);
-//	}
-//	
-//	@PutMapping(value = "/create-client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity createClient(@RequestBody ProspectDto prospect) {
-//		
-//		ProspectDto prospectDto = prospectService.createClient(prospect);
-//		
-//		return  ResponseEntity.ok().body(prospectDto);
-//	}
-	
+
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<ProspectDto> delete(@PathVariable("id") Long id) {

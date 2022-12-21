@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer> {
 
-    @Query(value="SELECT max(id) FROM Article")
+    @Query(value="SELECT max(id) FROM ArticleEntity")
     int max();
 
-    @Query(value="SELECT count(id) FROM Article")
+    @Query(value="SELECT count(id) FROM ArticleEntity")
     int nbre();
 }

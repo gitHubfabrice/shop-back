@@ -1,6 +1,5 @@
 package com.fatechnologies.service;
 
-import com.fatechnologies.domaine.dto.OperationDto;
 import com.fatechnologies.domaine.dto.TransactionDto;
 
 import java.util.List;

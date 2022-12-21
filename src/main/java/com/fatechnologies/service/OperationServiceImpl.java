@@ -8,6 +8,7 @@ import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
 import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.ArticleRepository;
+import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.repository.OperationRepository;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -38,6 +40,8 @@ public class OperationServiceImpl implements OperationService {
 	private ArticleMapper articleMapper;
 	@Autowired
 	private AccountBankRepository accountBankRepository;
+	@Autowired
+	private BalanceRepository balanceRepository;
 
 
 	@Override
@@ -86,6 +90,7 @@ public class OperationServiceImpl implements OperationService {
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
 		var accountBank =  accountBankRepository.findOneByReference(dto.getAccountBankReference()).orElseThrow(BasicException::new);
+		var clientBalance = balanceRepository.findById(dto.getClientBalanceId()).orElseThrow(BasicException::new);
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
@@ -118,10 +123,17 @@ public class OperationServiceImpl implements OperationService {
 		operation.setAmount(amount);
 
 		//mise à jour de la caisse
+		clientBalance.withdrawal(dto.getAmountTemp());
+		clientBalance.deposit(amount);
 		accountBank.deposit(dto.getAmountTemp());
 		accountBank.withdrawal(amount);
 		accountBankRepository.save(accountBank);
 		operationRepository.saveAndFlush(operation);
+	}
+
+	@Override
+	public void delete(UUID id) {
+		operationRepository.deleteById(id);
 	}
 
 	@Override

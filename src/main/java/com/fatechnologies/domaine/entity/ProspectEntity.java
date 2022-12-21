@@ -17,6 +17,7 @@ public class ProspectEntity {
 	@SequenceGenerator(name = "gen_shop_prospect", sequenceName = "seq_shop_prospect", allocationSize = 1)
 	@GeneratedValue(generator = "gen_shop_prospect")
 	private Long id;
+	private String reference;
 	private String lastname;
 	private String firstname;
 	private String gender;
@@ -28,7 +29,7 @@ public class ProspectEntity {
 	private String function;
 	private boolean client;
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Ville ville;
+	private City city;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "balance_id", referencedColumnName = "id")
 	private BalanceEntity balance;

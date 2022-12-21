@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter 
 @Entity
 @Table(name="shop_account-bank")
-public class AccountBank {
+public class AccountBankEntity {
 
 	@Id
 	@GeneratedValue

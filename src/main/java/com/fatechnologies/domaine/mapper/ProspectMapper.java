@@ -11,20 +11,16 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProspectMapper {
 	
-	@Mappings({ @Mapping(target = "villeId", source = "source.ville.id"),
-		 @Mapping(target = "villeLabel", source = "source.ville.label"),
-	    @Mapping(target = "villePays", source = "source.ville.pays"),	
-	    @Mapping(target = "villeCodePays", source = "source.ville.codePays"),
-	    @Mapping(target = "compteId", source = "source.compte.id"),
+	@Mappings({ @Mapping(target = "cityId", source = "city.id"),
+		 @Mapping(target = "cityLabel", source = "city.label"),
+	    @Mapping(target = "balanceId", source = "balance.id"),
 })
 	ProspectDto modelToDto(final ProspectEntity source);
 	List<ProspectDto> modelToDto(final List<ProspectEntity> sources);
 	
-	@Mappings({ @Mapping(target = "ville.id", source = "dto.villeId"),
-		 @Mapping(target = "ville.label", source = "dto.villeLabel"),
-	    @Mapping(target = "ville.pays", source = "dto.villePays"),	
-	    @Mapping(target = "ville.codePays", source = "dto.villeCodePays"),
-	    @Mapping(target = "compte.id", source = "dto.compteId"),
+	@Mappings({ @Mapping(target = "city.id", source = "cityId"),
+		 @Mapping(target = "city.label", source = "cityLabel"),
+	    @Mapping(target = "balance.id", source = "balanceId"),
 })
     ProspectEntity dtoToModel(final ProspectDto dto);
 	List<ProspectEntity> dtoToModel(final List<ProspectDto> dtos);

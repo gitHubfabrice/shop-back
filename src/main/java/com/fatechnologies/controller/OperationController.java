@@ -1,7 +1,7 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.OperationDto;
-import com.fatechnologies.service.TransactionService;
+import com.fatechnologies.service.OperationService;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("shop/operation")
@@ -22,28 +23,20 @@ public class OperationController {
 	private Logger log = LoggerFactory.getLogger(OperationController.class);
 
 	@Autowired
-	private TransactionService transactionService;
+	private OperationService operationService;
 
-	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OperationDto> create(@RequestBody OperationDto data) {
-
-		OperationDto dto = transactionService.create(data);
-
-		return ResponseEntity.ok().body(dto);
+	@PostMapping(value = "/in-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void inStock(@RequestBody OperationDto data) {
+		operationService.inStock(data);
 	}
 	
-	@PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OperationDto> update(@RequestBody OperationDto data) {
-
-		OperationDto dto = transactionService.update(data);
-
-		return ResponseEntity.ok().body(dto);
+	@PutMapping(value = "/out-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void outStock(@RequestBody OperationDto data) {
+		operationService.outStock(data);
 	}
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OperationDto>> getAllVille() {
-
-		List<OperationDto> dtos = transactionService.getAll();
-
+		List<OperationDto> dtos = operationService.getAll();
 		return ResponseEntity.ok().body(dtos);
 	}
 	
@@ -51,11 +44,8 @@ public class OperationController {
 	
 
 	@DeleteMapping(value = "/delete/{id}")
-	public ResponseEntity<OperationDto> delete(@PathVariable("id") Long id) {
-
-		transactionService.delete(id);
-
-		return ResponseEntity.ok().build();
+	public void delete(@PathVariable("id") UUID id) {
+		operationService.delete(id);
 	}
 	
 }

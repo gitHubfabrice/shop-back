@@ -10,12 +10,12 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "shop_ville")
-public class Ville {
+@Table(name = "shop_city")
+public class City {
 	
 	@Id
-	@SequenceGenerator(name = "gen_shop_ville", sequenceName = "seq_shop_ville",  allocationSize = 1)
-	@GeneratedValue(generator = "gen_shop_ville")
+	@SequenceGenerator(name = "gen_shop_city", sequenceName = "seq_shop_city",  allocationSize = 1)
+	@GeneratedValue(generator = "gen_shop_city")
 	private Long id;
 	private String code;
 	private String label;

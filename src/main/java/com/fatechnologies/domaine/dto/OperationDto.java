@@ -22,10 +22,11 @@ public class OperationDto implements Serializable {
 	private TypeOperation type;
 	private double amount;
 	private double amountTemp;
+	private UUID clientBalanceId;
 	private String clientId;
 	private String clientLastname;
 	private String clientFirstname;
-	private String clientVilleLabel;
+	private String clientCityLabel;
 	private String accountBankReference;
 	private List<ArticleDto> articles = new ArrayList<>();
 
