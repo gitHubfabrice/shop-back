@@ -1,9 +1,9 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.CompteDto;
-import com.fatechnologies.domaine.entity.Compte;
+import com.fatechnologies.domaine.entity.AccountBank;
 import com.fatechnologies.domaine.mapper.CompteMapper;
-import com.fatechnologies.repository.CompteRepository;
+import com.fatechnologies.repository.AccountBankRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,14 @@ import java.util.Optional;
 public class CompteServiceImpl implements CompteService {
 
 	@Autowired
-	private CompteRepository compteRepository;
+	private AccountBankRepository accountBankRepository;
 
 	@Autowired
 	private CompteMapper compteMapper;
 
 	@Override
 	public CompteDto getById(Long id) {
-		Optional<Compte> compte = compteRepository.findById(id);
+		Optional<AccountBank> compte = accountBankRepository.findById(id);
 
 		CompteDto dto = null;
 		if (compte != null && compte.isPresent()) {
@@ -41,34 +41,34 @@ public class CompteServiceImpl implements CompteService {
 	@Override
 	public CompteDto create(CompteDto compteDto) {
 
-		Compte compte = compteMapper.dtoToModele(compteDto);
+		AccountBank accountBank = compteMapper.dtoToModele(compteDto);
 
-		compte = compteRepository.saveAndFlush(compte);
-		return compteMapper.modeleToDto(compte);
+		accountBank = accountBankRepository.saveAndFlush(accountBank);
+		return compteMapper.modeleToDto(accountBank);
 	}
 
 	@Override
 	public CompteDto update(CompteDto CompteDto) {
 
-		Compte compte = compteMapper.dtoToModele(CompteDto);
-		compte = compteRepository.saveAndFlush(compte);
-		return compteMapper.modeleToDto(compte);
+		AccountBank accountBank = compteMapper.dtoToModele(CompteDto);
+		accountBank = accountBankRepository.saveAndFlush(accountBank);
+		return compteMapper.modeleToDto(accountBank);
 	}
 
 	@Override
 	public void delete(Long id) {
-		compteRepository.deleteById(id);
+		accountBankRepository.deleteById(id);
 
 	}
 
 	@Override
 	public List<CompteDto> getAll() {
-		List<Compte> comptes = compteRepository.findAll();
+		List<AccountBank> accountBanks = accountBankRepository.findAll();
 		List<CompteDto> dtos = new ArrayList<>();
 
-		for (Compte compte : comptes) {
+		for (AccountBank accountBank : accountBanks) {
 			CompteDto dto = new CompteDto();
-			dto = compteMapper.modeleToDto(compte);
+			dto = compteMapper.modeleToDto(accountBank);
 			dtos.add(dto);
 		}
 		return dtos;

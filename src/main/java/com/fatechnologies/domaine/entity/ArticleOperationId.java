@@ -8,21 +8,23 @@ import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Embeddable
-public class ArticleLivraisonId implements Serializable{
+public class ArticleOperationId implements Serializable{
+	@Serial
 	private static final long serialVersionUID = 1L;
     
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "article_id", nullable = false)
-	private ArticleEntity articleEntity;
+	private ArticleEntity article;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "delivery_id", nullable = false)
-	private Delivery delivery;
+	@JoinColumn(name = "operation_id", nullable = false)
+	private OperationEntity operation;
 
 }

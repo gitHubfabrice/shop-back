@@ -1,10 +1,16 @@
 package com.fatechnologies.service;
 
+import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.OperationDto;
-import com.fatechnologies.domaine.entity.Operation;
+import com.fatechnologies.domaine.entity.ArticleEntity;
+import com.fatechnologies.domaine.entity.ArticleOperation;
+import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
-import com.fatechnologies.repository.CompteRepository;
+import com.fatechnologies.repository.AccountBankRepository;
+import com.fatechnologies.repository.ArticleRepository;
 import com.fatechnologies.repository.OperationRepository;
+import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.exception.Exception;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,102 +26,121 @@ import java.util.Optional;
 @Service
 @Transactional
 public class OperationServiceImpl implements OperationService {
-
 	@Autowired
 	private OperationRepository operationRepository;
-
-	@Autowired
-	private CompteRepository compteRepository;
-
 	@Autowired
 	private OperationMapper operationMapper;
 
-	@Override
-	public OperationDto getById(Long id) {
-		Optional<Operation> operation = operationRepository.findById(id);
+	@Autowired
+	private ArticleRepository articleRepository;
 
-		OperationDto dto = null;
-		if (operation.isPresent()) {
-			dto = operationMapper.modelToDto(operation.get());
-		}
+	@Autowired
+	private ArticleMapper articleMapper;
+	@Autowired
+	private AccountBankRepository accountBankRepository;
 
-		return dto;
-	}
 
 	@Override
-	public OperationDto create(OperationDto dto) {
+	public void inStock(OperationDto dto) {
+		double amount = 0;
+		List<ArticleOperation> artLiv = new ArrayList<>();
+		var operation = operationMapper.dtoToModel(dto);
+		var accountBank =  accountBankRepository.findOneByReference(dto.getAccountBankReference()).orElseThrow(BasicException::new);
 
-		Operation operation = operationMapper.dtoToModele(dto);
+		for (ArticleDto art : dto.getArticles()) {
+			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
+			if(articleOptional.isPresent()){
 
-		var compte = compteRepository.findCompteById(dto.getCompteClientId());
-		var compteGeneral = compteRepository.findCompteById((long) 1);
+				ArticleOperation ao = new ArticleOperation();
+				ao.setArticle(articleOptional.get());
+				ao.setOperation(operation);
+				ao.setType(operation.getType());
+				ao.setQuantity(art.getQuantityArtDel());
+				ao.setPrice(art.getPriceArtDel());
+				amount += art.getPriceArtDel() * art.getQuantityArtDel();
 
-		if (operation.getNature().equals("Achat") ) {			
-			compteGeneral.setSolde(compteGeneral.getSolde() - operation.getAmount());
-			
-		} else if (operation.getNature().equals("Vente")) {			
-			compte.setSolde(compte.getSolde() + operation.getAmount());
-			compteGeneral.setSolde(compteGeneral.getSolde() + operation.getAmount());
+				//mise à jour du stock
+				articleOptional.get().less(art.getQuantityTemp());
+				articleOptional.get().more(art.getQuantityArtDel());
+
+				articleRepository.saveAndFlush(articleOptional.get());
+				artLiv.add(ao);
+			}
 		}
 
-		compteRepository.saveAndFlush(compteGeneral);
-		compteRepository.saveAndFlush(compte);
+		operation.getArticles().clear();
+		operation.getArticles().addAll(artLiv);
+		operation.setAmount(amount);
+
+		//mise à jour de la caisse
+		accountBank.deposit(dto.getAmountTemp());
+		accountBank.withdrawal(amount);
+
+		accountBankRepository.save(accountBank);
 		operationRepository.saveAndFlush(operation);
-
-		return operationMapper.modelToDto(operation);
 	}
 
 	@Override
-	public OperationDto update(OperationDto dto) {
+	public void outStock(OperationDto dto) {
+		double amount = 0;
+		List<ArticleOperation> artLiv = new ArrayList<>();
+		var operation = operationMapper.dtoToModel(dto);
+		var accountBank =  accountBankRepository.findOneByReference(dto.getAccountBankReference()).orElseThrow(BasicException::new);
 
-		var operation = operationMapper.dtoToModele(dto);
-		var compteGeneral = compteRepository.findCompteById((long) 1);
+		for (ArticleDto art : dto.getArticles()) {
+			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
+			if(articleOptional.isPresent()){
 
-		var compte = compteRepository.findCompteById(dto.getCompteClientId());
-		if (operation.getNature().equals("Achat")) {
-			if (dto.getMemoireNature().equals(operation.getNature()) ) {
-				compteGeneral.setSolde(compteGeneral.getSolde() + dto.getAmountMemory() - operation.getAmount());
-			} else {
-				compteGeneral.setSolde(compteGeneral.getSolde() - dto.getAmountMemory() - operation.getAmount());
-			}
+				//vérifions si l'article est disponible en stock
+				if (articleOptional.get().getQuantity() < art.getQuantityArtDel() + art.getQuantityTemp()) {
+					throw new Exception("Vérifiez votre stock de marchandise");
+				}
 
-		} else if (operation.getNature().equals("Vente")) {
-			if (dto.getMemoireNature().equals(operation.getNature()) ) {
-				compte.setSolde(compte.getSolde() - dto.getAmountMemory() + operation.getAmount());
-				compteGeneral.setSolde(compteGeneral.getSolde() - dto.getAmountMemory() + operation.getAmount());
-			} else {
-				compte.setSolde(compte.getSolde()  + dto.getAmountMemory() + operation.getAmount());
-				compteGeneral.setSolde(compteGeneral.getSolde() + dto.getAmountMemory() + operation.getAmount());
+				ArticleOperation ao = new ArticleOperation();
+				ao.setArticle(articleOptional.get());
+				ao.setOperation(operation);
+				ao.setType(operation.getType());
+				ao.setQuantity(art.getQuantityArtDel());
+				ao.setPrice(art.getPriceArtDel());
+				amount += art.getPriceArtDel() * art.getQuantityArtDel();
+
+				//mise à jour du stock
+				articleOptional.get().more(art.getQuantityTemp());
+				articleOptional.get().less(art.getQuantityArtDel());
+				articleRepository.saveAndFlush(articleOptional.get());
+
+				artLiv.add(ao);
 			}
 		}
-		compteRepository.saveAndFlush(compteGeneral);
-		compteRepository.saveAndFlush(compte);
-		 operationRepository.saveAndFlush(operation);
-		 
-		return operationMapper.modelToDto(operation);
-	}
 
-	@Override
-	public void delete(Long id) {
-		operationRepository.deleteById(id);
+		operation.getArticles().clear();
+		operation.getArticles().addAll(artLiv);
+		operation.setAmount(amount);
 
+		//mise à jour de la caisse
+		accountBank.deposit(dto.getAmountTemp());
+		accountBank.withdrawal(amount);
+		accountBankRepository.save(accountBank);
+		operationRepository.saveAndFlush(operation);
 	}
 
 	@Override
 	public List<OperationDto> getAll() {
-		List<Operation> operations = operationRepository.findAll();
+		var operations = operationRepository.findAll();
 		List<OperationDto> dtos = new ArrayList<>();
-
-		for (Operation operation : operations) {
-		var dto = operationMapper.modelToDto(operation);
-			
-			dto.setAmountMemory(operation.getAmount());
-			dto.setMemoireNature(operation.getNature());
-			
+		for (var op : operations) {
+			OperationDto dto = operationMapper.modelToDto(op);
+			dto.setAmountTemp(dto.getAmount());
+			for (ArticleOperation ao : op.getArticles()) {
+				ArticleDto art = articleMapper.modelToDto(ao.getArticle());
+				art.setQuantityTemp(ao.getQuantity());
+				art.setQuantityArtDel(ao.getQuantity());
+				art.setPriceArtDel(ao.getPrice());
+				dto.getArticles().add(art);
+			}
 			dtos.add(dto);
+
 		}
 		return dtos;
-
 	}
-
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "shop_article")
-public class Article {
+public class ArticleEntity {
 	
 	@Id
 	@SequenceGenerator(name = "gen_shop_article", sequenceName = "seq_shop_article", allocationSize = 1)
@@ -25,4 +25,12 @@ public class Article {
 	private double price;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
+	public void more(int qty){
+		this.quantity += qty;
+	}
+
+	public void less(int qty){
+		this.quantity += qty;
+	}
+
 }

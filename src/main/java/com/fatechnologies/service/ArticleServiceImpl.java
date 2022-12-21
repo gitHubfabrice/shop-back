@@ -1,7 +1,7 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
-import com.fatechnologies.domaine.entity.Article;
+import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.repository.ArticleRepository;
 import com.fatechnologies.repository.FileRepository;
@@ -58,9 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<ArticleDto> getAll() {
-		List<Article> articles = articleRepository.findAll();
+		List<ArticleEntity> articleEntities = articleRepository.findAll();
 		List<ArticleDto> dtos = new ArrayList<>();
-		for (var article : articles) {
+		for (var article : articleEntities) {
 			ArticleDto dto = articleMapper.modelToDto(article);
 			dtos.add(dto);
 		}

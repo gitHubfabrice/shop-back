@@ -1,7 +1,6 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.DeliveryDto;
-import com.fatechnologies.service.DeliveryVendorService;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;

@@ -5,7 +5,10 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -13,18 +16,18 @@ public class OperationDto implements Serializable {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	private UUID id;
+	private String reference;
+	private LocalDateTime createdAt;
+	private TypeOperation type;
 	private double amount;
-	private double amountMemory;
-	private String memoireNature;
-	private String nature;
-	private Date createdAt;
-	private Long clientId;
-	private Long compteClientId;
+	private double amountTemp;
+	private String clientId;
 	private String clientLastname;
-	private String clientContact;
+	private String clientFirstname;
 	private String clientVilleLabel;
-	private String clientVillePays;
+	private String accountBankReference;
+	private List<ArticleDto> articles = new ArrayList<>();
 
 
 }

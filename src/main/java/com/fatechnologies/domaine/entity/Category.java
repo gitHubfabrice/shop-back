@@ -22,6 +22,6 @@ public class Category {
 	private String label;
 	
 	@OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private Set<Article> articles = new HashSet<>();
+	private Set<ArticleEntity> articleEntities = new HashSet<>();
 
 }

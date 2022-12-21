@@ -21,7 +21,7 @@ public class ArticleVendorId implements Serializable{
     
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "article_id", nullable = false)
-	private Article article;
+	private ArticleEntity articleEntity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "delivery_vendor_id", nullable = false)

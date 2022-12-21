@@ -25,13 +25,7 @@ public class ArticleDto {
 	private double price;
 	private int categoryId;
 	private String categoryLabel;
-	public void more(int qty){
-			this.quantity += qty;
-	}
 
-	public void less(int qty){
-		this.quantity += qty;
-	}
 
 
 }

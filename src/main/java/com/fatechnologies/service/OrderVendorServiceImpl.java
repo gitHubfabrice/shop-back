@@ -2,7 +2,7 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.OrderDto;
-import com.fatechnologies.domaine.entity.Article;
+import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleFourCommande;
 import com.fatechnologies.domaine.entity.OrderVendor;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
@@ -71,7 +71,7 @@ public class OrderVendorServiceImpl implements OrderVendorService {
 
 		List<ArticleFourCommande> artCom = new ArrayList<>();
 		for (ArticleDto art : orderDto.getArticles()) {
-			Optional<Article> articleOptional = this.articleRepository
+			Optional<ArticleEntity> articleOptional = this.articleRepository
 					.findById(art.getId());
 
 			if (articleOptional.isPresent() && commande != null) {
@@ -103,7 +103,7 @@ public class OrderVendorServiceImpl implements OrderVendorService {
 
 		List<ArticleFourCommande> artCom = new ArrayList<>();
 		for (ArticleDto art : orderDto.getArticles()) {
-			Optional<Article> articleOptional = this.articleRepository
+			Optional<ArticleEntity> articleOptional = this.articleRepository
 					.findById(art.getId());
 
 			if (articleOptional.isPresent() && order != null) {

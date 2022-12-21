@@ -27,12 +27,12 @@ public class ArticleReturn implements Serializable{
 	private int qtyReturn;
 	
 	@Transient
-	public Article getArticle() {
-		return getPk().getArticle();
+	public ArticleEntity getArticle() {
+		return getPk().getArticleEntity();
 	}
 
-	public void setArticle(Article article) {
-		getPk().setArticle(article);
+	public void setArticle(ArticleEntity articleEntity) {
+		getPk().setArticleEntity(articleEntity);
 	}
 	
 	@Transient

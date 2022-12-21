@@ -1,7 +1,7 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.OperationDto;
-import com.fatechnologies.service.OperationService;
+import com.fatechnologies.service.TransactionService;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -22,12 +22,12 @@ public class OperationController {
 	private Logger log = LoggerFactory.getLogger(OperationController.class);
 
 	@Autowired
-	private OperationService operationService;
+	private TransactionService transactionService;
 
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<OperationDto> create(@RequestBody OperationDto data) {
 
-		OperationDto dto = operationService.create(data);
+		OperationDto dto = transactionService.create(data);
 
 		return ResponseEntity.ok().body(dto);
 	}
@@ -35,14 +35,14 @@ public class OperationController {
 	@PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<OperationDto> update(@RequestBody OperationDto data) {
 
-		OperationDto dto = operationService.update(data);
+		OperationDto dto = transactionService.update(data);
 
 		return ResponseEntity.ok().body(dto);
 	}
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OperationDto>> getAllVille() {
 
-		List<OperationDto> dtos = operationService.getAll();
+		List<OperationDto> dtos = transactionService.getAll();
 
 		return ResponseEntity.ok().body(dtos);
 	}
@@ -53,7 +53,7 @@ public class OperationController {
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<OperationDto> delete(@PathVariable("id") Long id) {
 
-		operationService.delete(id);
+		transactionService.delete(id);
 
 		return ResponseEntity.ok().build();
 	}

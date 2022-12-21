@@ -19,7 +19,7 @@ public class ArticleOrderId implements Serializable{
     
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "article_id", nullable = false)
-	private Article article;
+	private ArticleEntity articleEntity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id", nullable = false)

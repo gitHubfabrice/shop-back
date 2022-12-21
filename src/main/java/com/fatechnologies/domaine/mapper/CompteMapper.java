@@ -1,7 +1,7 @@
 package com.fatechnologies.domaine.mapper;
 
 import com.fatechnologies.domaine.dto.CompteDto;
-import com.fatechnologies.domaine.entity.Compte;
+import com.fatechnologies.domaine.entity.AccountBank;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 public interface CompteMapper {
 
 
-	CompteDto modeleToDto(final Compte source);
-	List<CompteDto> modeleToDto(final List<Compte> sources);
+	CompteDto modeleToDto(final AccountBank source);
+	List<CompteDto> modeleToDto(final List<AccountBank> sources);
 
-	Compte dtoToModele(final CompteDto dto);
-	List<Compte> dtoToModele(final List<CompteDto> dtos);
+	AccountBank dtoToModele(final CompteDto dto);
+	List<AccountBank> dtoToModele(final List<CompteDto> dtos);
 }

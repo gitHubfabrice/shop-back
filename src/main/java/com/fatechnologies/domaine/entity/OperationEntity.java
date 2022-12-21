@@ -1,38 +1,36 @@
 package com.fatechnologies.domaine.entity;
 
+import com.fatechnologies.domaine.dto.TypeOperation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
 @Setter
-@Entity
+@Getter
 @NoArgsConstructor
-@Table(name = "shop_order")
-public class Order {
+@Entity
+@Table(name = "shop_operation")
+public class OperationEntity {
 
 	@Id
 	@GeneratedValue
 	@UuidGenerator
 	private UUID id;
-	private String code;
-	private String status;
-	private boolean valide;
-	private Date date;
+	private String reference;
+	private LocalDateTime createdAt;
+	private TypeOperation type;
 	private double amount;
-	
-	@OneToMany(mappedBy = "pk.order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ArticleOrder> articleOrders =new ArrayList<>();
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ProspectEntity client;
 
+	@OneToMany(mappedBy = "pk.operation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<ArticleOperation> articles =new ArrayList<>();
 
 }

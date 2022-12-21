@@ -2,7 +2,7 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.DeliveryDto;
-import com.fatechnologies.domaine.entity.Article;
+import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleDelivery;
 import com.fatechnologies.domaine.entity.Delivery;
 import com.fatechnologies.domaine.entity.Order;
@@ -69,7 +69,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 		var delivery = deliveryMapper.dtoToModel(deliveryDto);
 
 		for (ArticleDto art : deliveryDto.getArticles()) {
-			Optional<Article> articleOptional = this.articleRepository.findById(art.getId());
+			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
 			//verifions si l'article est disponible en stock
 			if (art.getQuantity() > art.getQuantityArtDel()) {
@@ -82,9 +82,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 				montant += art.getPriceArtDel() * art.getQuantityArtDel();
 
 				// mise à jour du stock
-				Article article = this.articleMapper.dtoToModel(art);
-				article.setQuantity(article.getQuantity() - art.getQuantityArtDel());
-				articleRepository.saveAndFlush(article);
+				ArticleEntity articleEntity = this.articleMapper.dtoToModel(art);
+				articleEntity.setQuantity(articleEntity.getQuantity() - art.getQuantityArtDel());
+				articleRepository.saveAndFlush(articleEntity);
 				artLiv.add(al);
 			}else {
 				message = "La quantité à livé n'est pas disponible";
@@ -108,7 +108,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 	@Override
 	public void update(DeliveryDto deliveryDto) {
 
-		Optional<Article> articleOptional;
+		Optional<ArticleEntity> articleOptional;
 		var amount = 0;
 		var  artLiv = new ArrayList<ArticleDelivery>();
 		String message = null;
@@ -130,9 +130,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 						al.setPriceArtDel(art.getQuantityArtDel());
 						amount += art.getPriceArtDel() * art.getQuantityArtDel();
 						artLiv.add(al);
-						Article article = this.articleMapper.dtoToModel(art);
-						article.setQuantity(article.getQuantity() + memoire - art.getQuantityArtDel());
-						articleRepository.saveAndFlush(article);
+						ArticleEntity articleEntity = this.articleMapper.dtoToModel(art);
+						articleEntity.setQuantity(articleEntity.getQuantity() + memoire - art.getQuantityArtDel());
+						articleRepository.saveAndFlush(articleEntity);
 						order.setStatus("en-cours");
 					}
 

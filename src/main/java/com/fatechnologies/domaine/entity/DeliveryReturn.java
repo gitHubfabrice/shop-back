@@ -29,6 +29,6 @@ public class DeliveryReturn {
 	private List<ArticleReturn> articleReturns =new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Prospect client;
+	private ProspectEntity client;
 
 }

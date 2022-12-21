@@ -24,5 +24,5 @@ public class Image implements Serializable{
 	private String dossierName;	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Article article;
+	private ArticleEntity articleEntity;
 }

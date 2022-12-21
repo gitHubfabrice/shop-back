@@ -1,10 +1,10 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ProspectDto;
-import com.fatechnologies.domaine.entity.Compte;
-import com.fatechnologies.domaine.entity.Prospect;
+import com.fatechnologies.domaine.entity.AccountBank;
+import com.fatechnologies.domaine.entity.ProspectEntity;
 import com.fatechnologies.domaine.mapper.ProspectMapper;
-import com.fatechnologies.repository.CompteRepository;
+import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.ProspectRepository;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class ProspectServiceImpl implements ProspectService {
 	private ProspectRepository prospectRepository;
 	
 	@Autowired
-	private CompteRepository compteRepository;
+	private AccountBankRepository accountBankRepository;
 
 	@Autowired
 	private ProspectMapper prospectMapper;
@@ -34,7 +34,7 @@ public class ProspectServiceImpl implements ProspectService {
 
 	@Override
 	public ProspectDto getById(Long id) {
-		Optional<Prospect> prospect = prospectRepository.findById(id);
+		Optional<ProspectEntity> prospect = prospectRepository.findById(id);
 
 		ProspectDto dto = null;
 		if (prospect != null && prospect.isPresent()) {
@@ -47,25 +47,25 @@ public class ProspectServiceImpl implements ProspectService {
 	@Override
 	public ProspectDto create(ProspectDto prospectDto) {
 
-		Prospect prospect = prospectMapper.dtoToModel(prospectDto);
-		Compte compte = new Compte();
-		compte.setCode("1000" +  prospect.getCode());
-		compte.setSolde((double) 0);
-		compte = compteRepository.save(compte);
+		ProspectEntity prospectEntity = prospectMapper.dtoToModel(prospectDto);
+		AccountBank accountBank = new AccountBank();
+		accountBank.setCode("1000" +  prospectEntity.getCode());
+		accountBank.setAmount((double) 0);
+		accountBank = accountBankRepository.save(accountBank);
 		
-		prospect.setCompte(compte);
-		prospect = prospectRepository.saveAndFlush(prospect);
+		prospectEntity.setCompte(accountBank);
+		prospectEntity = prospectRepository.saveAndFlush(prospectEntity);
 	
 		
-		return prospectMapper.modelToDto(prospect);
+		return prospectMapper.modelToDto(prospectEntity);
 	}
 
 	@Override
 	public ProspectDto update(ProspectDto prospectDto) {
 
-		Prospect prospect = prospectMapper.dtoToModel(prospectDto);
-		prospect = prospectRepository.saveAndFlush(prospect);
-		return prospectMapper.modelToDto(prospect);
+		ProspectEntity prospectEntity = prospectMapper.dtoToModel(prospectDto);
+		prospectEntity = prospectRepository.saveAndFlush(prospectEntity);
+		return prospectMapper.modelToDto(prospectEntity);
 	}
 
 	@Override
@@ -76,13 +76,13 @@ public class ProspectServiceImpl implements ProspectService {
 
 	@Override
 	public List<ProspectDto> getAll() {
-		List<Prospect> prospects = prospectRepository.findAll();
+		List<ProspectEntity> prospectEntities = prospectRepository.findAll();
 		List<ProspectDto> dtos = new ArrayList<>();
-		for (Prospect e : prospects) {
-			Optional<Compte> compte = compteRepository.findById(e.getCompte().getId());
+		for (ProspectEntity e : prospectEntities) {
+			Optional<AccountBank> compte = accountBankRepository.findById(e.getCompte().getId());
 			var dto = new ProspectDto();
 			dto = prospectMapper.modelToDto(e);
-			dto.setSolde(compte.get().getSolde());
+			dto.setSolde(compte.get().getAmount());
 			dtos.add(dto);
 			
 		}

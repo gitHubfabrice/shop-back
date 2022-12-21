@@ -22,15 +22,12 @@ public class DeliveryDto {
 	private String code;
 	private Date date;
 	private Double amount;
-	
 	private UUID orderId;
 	private String orderCode;
-	
 	private Long vendorId;
 	private String vendorCode;
 	private String vendorContact;
 	private String vendorLastname;
-	
 	private String clientCode;
 	private String clientContact;
 	private String clientLastname;

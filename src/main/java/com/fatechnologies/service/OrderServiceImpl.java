@@ -2,7 +2,7 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.OrderDto;
-import com.fatechnologies.domaine.entity.Article;
+import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleOrder;
 import com.fatechnologies.domaine.entity.Order;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
 			List<ArticleOrder> artCom = new ArrayList<>();
 			for (ArticleDto art : orderDto.getArticles()) {
-				Optional<Article> articleOptional = this.articleRepository.findById(art.getId());
+				Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 
 				if (articleOptional.isPresent() && order != null) {
 					ArticleOrder ac = new ArticleOrder();
@@ -112,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
 
 		List<ArticleOrder> artCom = new ArrayList<>();
 		for (ArticleDto art : orderDto.getArticles()) {
-			Optional<Article> articleOptional = this.articleRepository.findById(art.getId());
+			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 
 			if (articleOptional.isPresent() && order != null) {
 				ArticleOrder ac = new ArticleOrder();
