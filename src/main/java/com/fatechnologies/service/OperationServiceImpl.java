@@ -12,6 +12,7 @@ import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.repository.OperationRepository;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
+import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,28 @@ public class OperationServiceImpl implements OperationService {
 
 
 	@Override
+	public OperationDto getById(UUID id) {
+		var operation = operationRepository.findById(id).orElseThrow(BasicException::new);
+
+		var dto = operationMapper.modelToDto(operation);
+		dto.setAmountTemp(dto.getAmount());
+		for (ArticleOperation ao : operation.getArticles()) {
+			var art = articleMapper.modelToDto(ao.getArticle());
+			art.setQuantityTemp(ao.getQuantity());
+			art.setQuantityArtDel(ao.getQuantity());
+			art.setPriceArtDel(ao.getPrice());
+			dto.getArticles().add(art);
+		}
+
+		return dto;
+	}
+
+	@Override
 	public void inStock(OperationDto dto) {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
-		var accountBank =  accountBankRepository.findOneByReference(dto.getAccountBankReference()).orElseThrow(BasicException::new);
+		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
@@ -89,7 +107,7 @@ public class OperationServiceImpl implements OperationService {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
-		var accountBank =  accountBankRepository.findOneByReference(dto.getAccountBankReference()).orElseThrow(BasicException::new);
+		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 		var clientBalance = balanceRepository.findById(dto.getClientBalanceId()).orElseThrow(BasicException::new);
 
 		for (ArticleDto art : dto.getArticles()) {

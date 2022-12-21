@@ -27,7 +27,6 @@ public class OperationDto implements Serializable {
 	private String clientLastname;
 	private String clientFirstname;
 	private String clientCityLabel;
-	private String accountBankReference;
 	private List<ArticleDto> articles = new ArrayList<>();
 
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 @Getter 
 @Entity
-@Table(name="shop_account-bank")
+@Table(name="shop_account_bank")
 public class AccountBankEntity {
 
 	@Id

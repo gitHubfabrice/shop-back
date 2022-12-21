@@ -25,6 +25,12 @@ public class OperationController {
 	@Autowired
 	private OperationService operationService;
 
+	@GetMapping(value = "/get-by-id{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OperationDto> getById(@PathVariable("id") UUID id) {
+		var dtos = operationService.getById(id);
+		return ResponseEntity.ok().body(dtos);
+	}
+
 	@PostMapping(value = "/in-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void inStock(@RequestBody OperationDto data) {
 		operationService.inStock(data);
@@ -34,14 +40,12 @@ public class OperationController {
 	public void outStock(@RequestBody OperationDto data) {
 		operationService.outStock(data);
 	}
+
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<OperationDto>> getAllVille() {
+	public ResponseEntity<List<OperationDto>> getAll() {
 		List<OperationDto> dtos = operationService.getAll();
 		return ResponseEntity.ok().body(dtos);
 	}
-	
-
-	
 
 	@DeleteMapping(value = "/delete/{id}")
 	public void delete(@PathVariable("id") UUID id) {
