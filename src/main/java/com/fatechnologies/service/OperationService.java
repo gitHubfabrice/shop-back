@@ -10,5 +10,6 @@ public interface OperationService {
 	void inStock(OperationDto dto);
 	void outStock(OperationDto dto);
 	void delete(UUID id);
-	List<OperationDto> getAll();
+	List<OperationDto> getAllInStockHistory();
+	List<OperationDto> getAllOutStockHistory();
 }

@@ -18,11 +18,17 @@ import java.util.List;
 @Getter
 @Setter
 
-public class VilleController {
-	private Logger log = LoggerFactory.getLogger(VilleController.class);
+public class CityController {
+	private Logger log = LoggerFactory.getLogger(CityController.class);
 
 	@Autowired
 	private CityService villeService;
+
+	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CityDto> getAById(@PathVariable("id") long id) {
+		var dto = villeService.getById(id);
+		return ResponseEntity.ok().body(dto);
+	}
 
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void create(@RequestBody CityDto data) {
@@ -34,8 +40,8 @@ public class VilleController {
 		villeService.save(data);
 	}
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<CityDto>> getAllVille() {
-		List<CityDto> dtos = villeService.getAll();
+	public ResponseEntity<List<CityDto>> getAll() {
+		var dtos = villeService.getAll();
 		return ResponseEntity.ok().body(dtos);
 	}
 

@@ -2,6 +2,7 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.OperationDto;
+import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleOperation;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
@@ -68,7 +69,7 @@ public class OperationServiceImpl implements OperationService {
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
 		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPE-ELED000" + idGen());
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
@@ -155,8 +156,8 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<OperationDto> getAll() {
-		var operations = operationRepository.findAll();
+	public List<OperationDto> getAllInStockHistory() {
+		var operations = operationRepository.findAllByType(TypeOperation.ADD);
 		List<OperationDto> dtos = new ArrayList<>();
 		for (var op : operations) {
 			OperationDto dto = operationMapper.modelToDto(op);
@@ -172,5 +173,32 @@ public class OperationServiceImpl implements OperationService {
 
 		}
 		return dtos;
+	}
+
+	@Override
+	public List<OperationDto> getAllOutStockHistory() {
+		var operations = operationRepository.findAllByType(TypeOperation.OUT);
+		List<OperationDto> dtos = new ArrayList<>();
+		for (var op : operations) {
+			OperationDto dto = operationMapper.modelToDto(op);
+			dto.setAmountTemp(dto.getAmount());
+			for (ArticleOperation ao : op.getArticles()) {
+				ArticleDto art = articleMapper.modelToDto(ao.getArticle());
+				art.setQuantityTemp(ao.getQuantity());
+				art.setQuantityArtDel(ao.getQuantity());
+				art.setPriceArtDel(ao.getPrice());
+				dto.getArticles().add(art);
+			}
+			dtos.add(dto);
+
+		}
+		return dtos;
+	}
+
+	public int idGen(){
+		var nbre = articleRepository.nbre();
+		if (nbre == 0)
+			return 1;
+		else return articleRepository.max() + 1;
 	}
 }

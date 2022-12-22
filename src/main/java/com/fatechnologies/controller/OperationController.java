@@ -41,9 +41,15 @@ public class OperationController {
 		operationService.outStock(data);
 	}
 
-	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<OperationDto>> getAll() {
-		List<OperationDto> dtos = operationService.getAll();
+	@GetMapping(value = "/get-all-in", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<OperationDto>> getAllIn() {
+		List<OperationDto> dtos = operationService.getAllInStockHistory();
+		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-all-out", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<OperationDto>> getAllOut() {
+		List<OperationDto> dtos = operationService.getAllOutStockHistory();
 		return ResponseEntity.ok().body(dtos);
 	}
 

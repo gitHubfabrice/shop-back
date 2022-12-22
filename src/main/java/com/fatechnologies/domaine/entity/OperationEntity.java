@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +24,7 @@ public class OperationEntity {
 	@UuidGenerator
 	private UUID id;
 	private String reference;
-	private LocalDateTime createdAt;
+	private LocalDate createdAt;
 	private TypeOperation type;
 	private double amount;
 	@ManyToOne(fetch = FetchType.LAZY)
