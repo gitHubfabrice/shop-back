@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "shop_prospect")
-public class ProspectEntity{
+public class ProspectEntity extends Person{
 
 	@Id
 	@SequenceGenerator(name = "gen_shop_prospect", sequenceName = "seq_shop_prospect", allocationSize = 1)
@@ -19,12 +19,10 @@ public class ProspectEntity{
 	private Long id;
 	private String reference;
 	private LocalDateTime createdAt;
-	private boolean client;
+	private boolean isClient;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private City city;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "balance_id", referencedColumnName = "id")
 	private BalanceEntity balance;
-	@Embedded
-	private Person person;
 }

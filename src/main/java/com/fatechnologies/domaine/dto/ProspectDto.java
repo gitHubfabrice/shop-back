@@ -27,8 +27,9 @@ public class ProspectDto extends  Person implements Serializable {
 	private Long commercialId;
 	private Date birthday;
 	private UUID balanceId;
+	private double balanceAmount;
 	private Long cityId;
 	private String cityLabel;
-	private double pay;
+	private String cityCountry;
 
 }

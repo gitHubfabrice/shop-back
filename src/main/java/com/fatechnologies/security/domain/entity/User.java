@@ -66,7 +66,8 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private Set<PasswordHistoric> passwordHistoricals;
-  @OneToOne(mappedBy = "user")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "balance_id", referencedColumnName = "id")
   private BalanceEntity balance;
 
   public User() {

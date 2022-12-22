@@ -7,10 +7,7 @@ import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleOperation;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
-import com.fatechnologies.repository.AccountBankRepository;
-import com.fatechnologies.repository.ArticleRepository;
-import com.fatechnologies.repository.BalanceRepository;
-import com.fatechnologies.repository.OperationRepository;
+import com.fatechnologies.repository.*;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
 import com.fatechnologies.security.utils.Constants;
@@ -34,16 +31,16 @@ public class OperationServiceImpl implements OperationService {
 	private OperationRepository operationRepository;
 	@Autowired
 	private OperationMapper operationMapper;
-
 	@Autowired
 	private ArticleRepository articleRepository;
-
 	@Autowired
 	private ArticleMapper articleMapper;
 	@Autowired
 	private AccountBankRepository accountBankRepository;
 	@Autowired
 	private BalanceRepository balanceRepository;
+	@Autowired
+	private ProspectRepository prospectRepository;
 
 
 	@Override
@@ -69,7 +66,7 @@ public class OperationServiceImpl implements OperationService {
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
 		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPE-ELED000" + idGen());
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEOut-ELED000" + idGen());
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
@@ -108,8 +105,11 @@ public class OperationServiceImpl implements OperationService {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
+		var client = prospectRepository.findById(dto.getClientId()).orElseThrow(BasicException::new);
+		operation.setClient(client);
 		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		var clientBalance = balanceRepository.findById(dto.getClientBalanceId()).orElseThrow(BasicException::new);
+		var clientBalance = balanceRepository.findById(client.getBalance().getId()).orElseThrow(BasicException::new);
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEIn-ELED000" + idGen());
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());

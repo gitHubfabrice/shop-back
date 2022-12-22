@@ -62,7 +62,7 @@ public class ProspectServiceImpl implements ProspectService {
 		for (ProspectEntity p : prospectEntities) {
 			var  balance = balanceRepository.findById(p.getBalance().getId()).orElseThrow(BasicException::new);
 			var dto = prospectMapper.modelToDto(p);
-			dto.setPay(balance.getAmount());
+			dto.setBalanceAmount(balance.getAmount());
 			dtos.add(dto);
 			
 		}

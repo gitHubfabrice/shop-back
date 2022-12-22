@@ -3,13 +3,12 @@ package com.fatechnologies.domaine.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
-import java.io.Serializable;
+import javax.persistence.MappedSuperclass;
 
-@Embeddable
 @Getter
 @Setter
-public  class  Person  implements Serializable {
+@MappedSuperclass
+public abstract class  Person {
     private String lastname;
     private String firstname;
     private String adresse;

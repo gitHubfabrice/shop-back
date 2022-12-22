@@ -14,8 +14,8 @@ public interface OperationMapper {
 
 	@Mappings({
 		@Mapping(target = "clientId", source = "client.id"),
-		@Mapping(target = "clientLastname", source = "client.person.lastname"),
-		@Mapping(target = "clientFirstname", source = "client.person.firstname"),
+		@Mapping(target = "clientLastname", source = "client.lastname"),
+		@Mapping(target = "clientFirstname", source = "client.firstname"),
 		@Mapping(target = "clientCityLabel", source = "client.city.label"),
 		@Mapping(target = "clientBalanceId", source = "client.balance.id")
 	})

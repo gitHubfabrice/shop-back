@@ -18,6 +18,7 @@ public class AccountBankEntity {
 	@UuidGenerator
 	private UUID id;
 	private String reference;
+	private String label;
 	private double amount;
 
 	public void deposit(double amount){

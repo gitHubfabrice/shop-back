@@ -29,10 +29,17 @@ public class ProspectController {
 		 prospectService.save(prospect);
 	}
 
+	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ProspectDto> getAById(@PathVariable("id") long id) {
+		var dto = prospectService.getById(id);
+		return ResponseEntity.ok().body(dto);
+	}
+
 	@PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void update(@RequestBody ProspectDto prospect) {
 		prospectService.save(prospect);
 	}
+
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ProspectDto>> getAllProspect() {
 
@@ -40,7 +47,6 @@ public class ProspectController {
 
 		return ResponseEntity.ok().body(prospects);
 	}
-
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<ProspectDto> delete(@PathVariable("id") Long id) {

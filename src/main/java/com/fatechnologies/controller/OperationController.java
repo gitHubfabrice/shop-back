@@ -25,7 +25,7 @@ public class OperationController {
 	@Autowired
 	private OperationService operationService;
 
-	@GetMapping(value = "/get-by-id{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<OperationDto> getById(@PathVariable("id") UUID id) {
 		var dtos = operationService.getById(id);
 		return ResponseEntity.ok().body(dtos);

@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProspectRepository extends JpaRepository<ProspectEntity, Long>{
-	
-	@Query("Select p from ProspectEntity p where p.person.contact = :contact")
-    ProspectEntity findByContact(@Param("contact") String contact);
-	
+
+	@Query("Select p from ProspectEntity p where p.contact = :contact")
+	ProspectEntity findByContact(@Param("contact") String contact);
+
 	@Query(value="SELECT max(id) FROM ProspectEntity")
 	int max();
 	

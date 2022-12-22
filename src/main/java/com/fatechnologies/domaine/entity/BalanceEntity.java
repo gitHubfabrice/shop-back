@@ -18,11 +18,11 @@ public class BalanceEntity {
     @UuidGenerator
     private UUID id;
     private double amount;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
     @OneToOne(mappedBy = "balance")
     private ProspectEntity client;
+
+    @OneToOne(mappedBy = "balance")
+    private User user;
 
 
     public void deposit(double amount){
