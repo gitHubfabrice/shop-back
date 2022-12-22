@@ -27,5 +27,4 @@ public class ProspectEntity{
 	private BalanceEntity balance;
 	@Embedded
 	private Person person;
-
 }
