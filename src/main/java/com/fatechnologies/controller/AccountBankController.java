@@ -33,7 +33,6 @@ public class AccountBankController {
 		return ResponseEntity.ok().body(accountBankDto);
 	}
 
-
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void create(@RequestBody AccountBankDto compte) {
 		accountBankService.save(compte);
