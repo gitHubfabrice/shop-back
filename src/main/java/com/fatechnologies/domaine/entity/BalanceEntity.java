@@ -1,6 +1,6 @@
 package com.fatechnologies.domaine.entity;
 
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
@@ -22,8 +22,7 @@ public class BalanceEntity {
     private ProspectEntity client;
 
     @OneToOne(mappedBy = "balance")
-    private User user;
-
+    private UserEntity user;
 
     public void deposit(double amount){
         this.amount += amount;

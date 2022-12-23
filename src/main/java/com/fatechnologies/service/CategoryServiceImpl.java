@@ -1,7 +1,7 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.CategoryDto;
-import com.fatechnologies.domaine.entity.Category;
+import com.fatechnologies.domaine.entity.CategoryEntity;
 import com.fatechnologies.domaine.mapper.CategoryMapper;
 import com.fatechnologies.repository.CategoryRepository;
 import com.fatechnologies.security.exception.BasicException;
@@ -29,12 +29,12 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDto getById(int id) {
 		var category = categoryRepository.findById(id).orElseThrow(BasicException::new);
-		return categoryMapper.modeleToDto(category);
+		return categoryMapper.modelToDto(category);
 	}
 
 	@Override
 	public void save(CategoryDto categoryDto) {
-		var category = categoryMapper.dtoToModele(categoryDto);
+		var category = categoryMapper.dtoToModel(categoryDto);
 		categoryRepository.saveAndFlush(category);
 	}
 
@@ -48,9 +48,9 @@ public class CategoryServiceImpl implements CategoryService {
 		var  categories = categoryRepository.findAll();
 		List<CategoryDto> dtos = new ArrayList<>();
 
-		for (Category category : categories) {
+		for (CategoryEntity category : categories) {
 			CategoryDto dto;
-			dto = categoryMapper.modeleToDto(category);
+			dto = categoryMapper.modelToDto(category);
 			dtos.add(dto);
 		}
 		return dtos;

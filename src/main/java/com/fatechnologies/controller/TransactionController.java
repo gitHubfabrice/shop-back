@@ -34,9 +34,21 @@ public class TransactionController {
 	public void transfer(@RequestBody TransactionDto data) {
 		transactionService.transfer(data);
 	}
+
+	@PutMapping(value = "/checking/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void checking(@PathVariable("id") UUID id) {
+		transactionService.checkingTransaction(id);
+	}
+
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<TransactionDto>> getAll() {
 		var  dtos = transactionService.getAll();
+		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-all-checked", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TransactionDto>> getAllCheck() {
+		var  dtos = transactionService.getAllByStatus();
 		return ResponseEntity.ok().body(dtos);
 	}
 

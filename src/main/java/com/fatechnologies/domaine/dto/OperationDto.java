@@ -23,6 +23,7 @@ public class OperationDto implements Serializable {
 	private double amount;
 	private double amountTemp;
 	private UUID clientBalanceId;
+	private UUID userId;
 	private long clientId;
 	private String clientLastname;
 	private String clientFirstname;

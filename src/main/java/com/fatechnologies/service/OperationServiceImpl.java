@@ -8,9 +8,9 @@ import com.fatechnologies.domaine.entity.ArticleOperation;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
 import com.fatechnologies.repository.*;
+import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
-import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,8 @@ public class OperationServiceImpl implements OperationService {
 	private BalanceRepository balanceRepository;
 	@Autowired
 	private ProspectRepository prospectRepository;
+	@Autowired
+	private UserJpa userJpa;
 
 
 	@Override
@@ -50,11 +52,13 @@ public class OperationServiceImpl implements OperationService {
 		var dto = operationMapper.modelToDto(operation);
 		dto.setAmountTemp(dto.getAmount());
 		for (ArticleOperation ao : operation.getArticles()) {
-			var art = articleMapper.modelToDto(ao.getArticle());
-			art.setQuantityTemp(ao.getQuantity());
-			art.setQuantityArtDel(ao.getQuantity());
-			art.setPriceArtDel(ao.getPrice());
-			dto.getArticles().add(art);
+
+			var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
+			var artDto = articleMapper.modelToDto(art);
+			artDto.setQuantityTemp(ao.getQuantity());
+			artDto.setQuantityArtDel(ao.getQuantity());
+			artDto.setPriceArtDel(ao.getPrice());
+			dto.getArticles().add(artDto);
 		}
 
 		return dto;
@@ -65,10 +69,9 @@ public class OperationServiceImpl implements OperationService {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
-		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEOut-ELED000" + idGen());
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEIn-ELED000" + idGen());
 		for (ArticleDto art : dto.getArticles()) {
-			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
+			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
 
 				ArticleOperation ao = new ArticleOperation();
@@ -92,11 +95,6 @@ public class OperationServiceImpl implements OperationService {
 		operation.getArticles().addAll(artLiv);
 		operation.setAmount(amount);
 
-		//mise à jour de la caisse
-		accountBank.deposit(dto.getAmountTemp());
-		accountBank.withdrawal(amount);
-
-		accountBankRepository.save(accountBank);
 		operationRepository.saveAndFlush(operation);
 	}
 
@@ -107,9 +105,9 @@ public class OperationServiceImpl implements OperationService {
 		var operation = operationMapper.dtoToModel(dto);
 		var client = prospectRepository.findById(dto.getClientId()).orElseThrow(BasicException::new);
 		operation.setClient(client);
-		var accountBank =  accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 		var clientBalance = balanceRepository.findById(client.getBalance().getId()).orElseThrow(BasicException::new);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEIn-ELED000" + idGen());
+		var userBalance   = userJpa.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEOut-ELED000" + idGen());
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
@@ -144,9 +142,11 @@ public class OperationServiceImpl implements OperationService {
 		//mise à jour de la caisse
 		clientBalance.withdrawal(dto.getAmountTemp());
 		clientBalance.deposit(amount);
-		accountBank.deposit(dto.getAmountTemp());
-		accountBank.withdrawal(amount);
-		accountBankRepository.save(accountBank);
+		userBalance.withdrawal(dto.getAmountTemp());
+		userBalance.deposit(amount);
+
+		balanceRepository.save(userBalance);
+		balanceRepository.save(clientBalance);
 		operationRepository.saveAndFlush(operation);
 	}
 
@@ -163,11 +163,12 @@ public class OperationServiceImpl implements OperationService {
 			OperationDto dto = operationMapper.modelToDto(op);
 			dto.setAmountTemp(dto.getAmount());
 			for (ArticleOperation ao : op.getArticles()) {
-				ArticleDto art = articleMapper.modelToDto(ao.getArticle());
-				art.setQuantityTemp(ao.getQuantity());
-				art.setQuantityArtDel(ao.getQuantity());
-				art.setPriceArtDel(ao.getPrice());
-				dto.getArticles().add(art);
+				var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
+				var artDto = articleMapper.modelToDto(art);
+				artDto.setQuantityTemp(ao.getQuantity());
+				artDto.setQuantityArtDel(ao.getQuantity());
+				artDto.setPriceArtDel(ao.getPrice());
+				dto.getArticles().add(artDto);
 			}
 			dtos.add(dto);
 
@@ -183,11 +184,12 @@ public class OperationServiceImpl implements OperationService {
 			OperationDto dto = operationMapper.modelToDto(op);
 			dto.setAmountTemp(dto.getAmount());
 			for (ArticleOperation ao : op.getArticles()) {
-				ArticleDto art = articleMapper.modelToDto(ao.getArticle());
-				art.setQuantityTemp(ao.getQuantity());
-				art.setQuantityArtDel(ao.getQuantity());
-				art.setPriceArtDel(ao.getPrice());
-				dto.getArticles().add(art);
+				var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
+				var artDto = articleMapper.modelToDto(art);
+				artDto.setQuantityTemp(ao.getQuantity());
+				artDto.setQuantityArtDel(ao.getQuantity());
+				artDto.setPriceArtDel(ao.getPrice());
+				dto.getArticles().add(artDto);
 			}
 			dtos.add(dto);
 
@@ -201,4 +203,6 @@ public class OperationServiceImpl implements OperationService {
 			return 1;
 		else return articleRepository.max() + 1;
 	}
+
+
 }

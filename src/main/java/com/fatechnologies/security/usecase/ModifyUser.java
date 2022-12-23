@@ -22,9 +22,14 @@ public class ModifyUser implements UseCase<ModifyUserCommand>{
 	@Override
 	public void perform(ModifyUserCommand command) {
 		var user = userPort.getById(command.id());
-        user.setProfil(command.profil());
         user.setAuthorities(user.getAuthorities());
-        user.setProfil(command.profil());
+        user.setFirstname(command.firstname());
+        user.setLastname(command.lastname());
+        user.setStatus(command.status());
+        user.setContact(command.contact());
+        user.setFunction(command.function());
+        user.setFirstname(command.firstname());
+		user.setRoleLabel(command.roleLabel());
 
 		userPort.save(user);
 		

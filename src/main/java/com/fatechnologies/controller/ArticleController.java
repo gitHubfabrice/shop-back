@@ -26,7 +26,6 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-
 	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ArticleDto> findById(@PathVariable("id") int id) {
 

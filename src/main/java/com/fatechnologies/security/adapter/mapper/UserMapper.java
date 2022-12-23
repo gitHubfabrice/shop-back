@@ -1,8 +1,10 @@
 package com.fatechnologies.security.adapter.mapper;
 
 import com.fatechnologies.security.adapter.mapper.factory.AccountFactory;
+import com.fatechnologies.security.command.CreateUserCommand;
+import com.fatechnologies.security.command.ModifyUserCommand;
 import com.fatechnologies.security.domain.dto.UserDto;
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -16,9 +18,11 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
     @Named(value = "useMe")
     @Mapping(target = "authorities", ignore = true)
-    UserDto modelToDto(User source);
-    User dtoToModel(UserDto dto);
-    Set<User> dtosToModels(Set<UserDto> dtos);
+    UserDto modelToDto(UserEntity source);
+    UserDto commandAddToDto(CreateUserCommand source);
+    UserDto commandModToDto(ModifyUserCommand source);
+    UserEntity dtoToModel(UserDto dto);
+    Set<UserEntity> dtosToModels(Set<UserDto> dtos);
     @IterableMapping(qualifiedByName = "useMe")
-    List<UserDto> modelsToDtos(List<User> sources);
+    List<UserDto> modelsToDtos(List<UserEntity> sources);
 }

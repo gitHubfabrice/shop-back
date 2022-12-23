@@ -1,6 +1,7 @@
 package com.fatechnologies.domaine.entity;
 
 import com.fatechnologies.domaine.dto.Person;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +22,11 @@ public class ProspectEntity extends Person{
 	private LocalDateTime createdAt;
 	private boolean isClient;
 	@ManyToOne(fetch = FetchType.LAZY)
-	private City city;
+	private CityEntity city;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "balance_id", referencedColumnName = "id")
 	private BalanceEntity balance;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	private UserEntity user;
 }

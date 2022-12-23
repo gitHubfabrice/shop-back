@@ -1,8 +1,7 @@
 package com.fatechnologies.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fatechnologies.security.domain.entity.Profil;
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,36 +19,42 @@ public class UserDetailsImpl implements UserDetails {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private UUID id;
-	private Profil profil;
 	private String username;
+	private String firstname;
+	private String lastname;
+	private String status;
 	private String email;
 	@JsonIgnore
 	private String password;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(UUID id, String username, Profil profil, String email, String password,
+	public UserDetailsImpl(UUID id, String username, String lastname, String firstname, String status, String email, String password,
 						   Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
-		this.profil = profil;
+		this.lastname = lastname;
+		this.firstname = firstname;
+		this.status = status;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
 	}
 
-	public static UserDetailsImpl build(User user) {
-		List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream()
+	public static UserDetailsImpl build(UserEntity userEntity) {
+		List<SimpleGrantedAuthority> authorities = userEntity.getAuthorities().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getLabel()))
 				.toList();
 
 
 		return new UserDetailsImpl(
-				user.getId(),
-				user.getUsername(),
-				user.getProfil(),
-				user.getEmail(),
-				user.getPassword(),
+				userEntity.getId(),
+				userEntity.getUsername(),
+				userEntity.getLastname(),
+				userEntity.getFirstname(),
+				userEntity.getStatus(),
+				userEntity.getEmail(),
+				userEntity.getPassword(),
 				authorities);
 	}
 

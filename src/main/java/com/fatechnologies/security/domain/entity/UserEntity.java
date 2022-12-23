@@ -1,7 +1,7 @@
 package com.fatechnologies.security.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fatechnologies.domaine.entity.BalanceEntity;
+import com.fatechnologies.domaine.entity.*;
 import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Setter
 @Entity
 @Table(name = "shop_secure_user")
-public class User implements Serializable {
+public class UserEntity extends Profil implements Serializable {
 
   @Id
   private UUID id;
@@ -53,9 +53,6 @@ public class User implements Serializable {
   @Column(name = "lang_key", length = 10)
   private String langKey;
 
-  @Embedded
-  private Profil profil;
-
   @ManyToMany()
   @JoinTable(
           name = "shop_secure_user_authority",
@@ -70,12 +67,26 @@ public class User implements Serializable {
   @JoinColumn(name = "balance_id", referencedColumnName = "id")
   private BalanceEntity balance;
 
-  public User() {
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<TransactionEntity> transactions;
+
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<CategoryEntity> categories;
+
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<OperationEntity> operations;
+
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<ProspectEntity> clients;
+
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<CityEntity> cities;
+
+  public UserEntity() {
     this.authorities = new HashSet<>();
     this.passwordHistoricals = new HashSet<>();
     this.balance = new BalanceEntity();
   }
-
 
   public void addAuthority(Authority authority) {
     boolean estContenu = this.authorities.contains(authority);
@@ -119,7 +130,7 @@ public class User implements Serializable {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof User that)) {
+    if (!(o instanceof UserEntity that)) {
       return false;
     }
     return id.equals(that.id);
@@ -129,7 +140,7 @@ public class User implements Serializable {
   public int hashCode() {
     return Objects
         .hash(id, username, password, lastDateUpdatePassword, activated, locked, connected,
-            role, passwordHistoricals, profil);
+            role, passwordHistoricals);
   }
 
   @Override
@@ -144,7 +155,6 @@ public class User implements Serializable {
         ", connected=" + connected +
         ", roles=" + role +
         ", passwordHistoricals=" + passwordHistoricals +
-        ", profil=" + profil +
         '}';
   }
 }

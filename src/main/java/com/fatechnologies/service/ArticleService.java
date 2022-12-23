@@ -11,7 +11,4 @@ public interface ArticleService {
 	void update(ArticleDto article);
 	void delete(int id);
 	List<ArticleDto> getAll();
-
-
-
 }

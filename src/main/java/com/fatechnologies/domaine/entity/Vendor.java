@@ -27,6 +27,6 @@ public class Vendor {
 	private String contact;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private City city;
+	private CityEntity city;
 
 }

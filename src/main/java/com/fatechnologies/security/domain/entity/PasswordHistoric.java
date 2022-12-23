@@ -28,7 +28,7 @@ public class PasswordHistoric implements Serializable {
     private String password;
     private Instant dateHistorisation;
     @ManyToOne
-    private User user;
+    private UserEntity user;
 
     public PasswordHistoric() {
         this(UUID.randomUUID());

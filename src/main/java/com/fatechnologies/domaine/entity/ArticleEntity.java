@@ -1,5 +1,6 @@
 package com.fatechnologies.domaine.entity;
 
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +25,10 @@ public class ArticleEntity {
 	private LocalDateTime createdAt;
 	private double price;
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Category category;
+	private CategoryEntity category;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	private UserEntity user;
 	public void more(int qty){
 		this.quantity += qty;
 	}

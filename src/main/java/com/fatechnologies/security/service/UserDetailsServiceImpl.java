@@ -1,7 +1,7 @@
 package com.fatechnologies.security.service;
 
 import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +17,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userJpa.findOneByUsernameIgnoreCase(username)
+		UserEntity userEntity = userJpa.findOneByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new UsernameNotFoundException("L'utilisateur n'existe pas: " + username));
 
-		return UserDetailsImpl.build(user);
+		return UserDetailsImpl.build(userEntity);
 	}
 
 }

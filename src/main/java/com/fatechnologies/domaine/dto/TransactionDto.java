@@ -15,12 +15,15 @@ public class TransactionDto implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private UUID id;
+	private String reference;
+	private String label;
 	private double amount;
 	private double amountTemp;
 	private TypeTransaction nature;
 	private LocalDateTime createdAt;
-	private UUID balanceId;
-	private UUID accountBankId;
+	private UUID userId;
+	private String userLastname;
+	private String userFirstname;
 	private boolean status;
 	private boolean direct;
 

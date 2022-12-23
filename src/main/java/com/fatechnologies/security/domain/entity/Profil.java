@@ -3,14 +3,14 @@ package com.fatechnologies.security.domain.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 @Getter
 @Setter
-@Embeddable
-public class Profil implements Serializable {
+@MappedSuperclass
+public abstract class Profil implements Serializable {
 
   private String lastname;
   private String firstname;

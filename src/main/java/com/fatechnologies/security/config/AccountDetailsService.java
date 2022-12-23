@@ -1,7 +1,7 @@
 package com.fatechnologies.security.config;
 
 import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import com.fatechnologies.security.service.UserDetailsImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +21,9 @@ public class AccountDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userJpa.findOneByUsernameIgnoreCase(username)
+        UserEntity userEntity = userJpa.findOneByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("L'identifiant n'existe pas: " + username));
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(userEntity);
     }
 
 }

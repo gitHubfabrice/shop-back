@@ -1,15 +1,13 @@
 package com.fatechnologies.domaine.entity;
 
 import com.fatechnologies.domaine.dto.TypeTransaction;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,9 +22,13 @@ public class TransactionEntity {
 	@GeneratedValue
 	@UuidGenerator
 	private UUID id;
+	private String reference;
+	private String label;
 	private double amount;
 	private TypeTransaction nature;
 	private LocalDateTime createdAt;
 	private boolean status;
 	private boolean direct;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private UserEntity user;
 }

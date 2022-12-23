@@ -11,7 +11,7 @@ import com.fatechnologies.security.domain.dto.AuthorityDto;
 import com.fatechnologies.security.domain.dto.UserDto;
 import com.fatechnologies.security.domain.entity.Authority;
 import com.fatechnologies.security.domain.entity.Role;
-import com.fatechnologies.security.domain.entity.User;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import com.fatechnologies.security.exception.Exception;
 import com.fatechnologies.security.exception.*;
 import com.fatechnologies.security.port.UserPort;
@@ -88,8 +88,8 @@ public class UserAdapter implements UserPort {
 
         var authorities = new HashSet<Authority>();
         user.getAuthoritiesString().forEach(item->{
-            var dtoT = authorityJpa.findByLabelIgnoreCase(item);
-            authorities.add(dtoT.get());
+            var dtoT = authorityJpa.findByLabelIgnoreCase(item).orElseThrow(BasicException::new);
+            authorities.add(dtoT);
         });
         entity.getAuthorities().clear();
         var role = roleJpa.findOneByLabelIgnoreCase(user.getRoleLabel()).orElseThrow();
@@ -98,7 +98,6 @@ public class UserAdapter implements UserPort {
         entity.getAuthorities().addAll(authoritiesRole);
 
         entity.setEmail(user.getEmail());
-        entity.setProfil(user.getProfil());
         entity.setUsername(user.getUsername());
         entity.setGender(user.getGender());
         var balance = new BalanceEntity();
@@ -137,7 +136,7 @@ public class UserAdapter implements UserPort {
 	public List<UserDto> getAll() {
         var accountEntities = userJpa.findAll();
         var users = new ArrayList<UserDto>();
-        for (User accountEntity : accountEntities) {
+        for (UserEntity accountEntity : accountEntities) {
             var dto = userMapper.modelToDto(accountEntity);
             var authorities = new HashSet<AuthorityDto>();
             if(!accountEntity.getAuthorities().isEmpty()){
@@ -157,7 +156,7 @@ public class UserAdapter implements UserPort {
 	}
 
     @Override
-    public User registerAccount(UserDto userDTO, String password) {
+    public UserEntity registerAccount(UserDto userDTO, String password) {
         userJpa
                 .findOneByUsernameIgnoreCase(userDTO.getUsername().toLowerCase())
                 .ifPresent(existingUser -> {
@@ -174,44 +173,41 @@ public class UserAdapter implements UserPort {
                         throw new EmailAlreadyUsedException();
                     }
                 });
-        User newUser = new User();
+        UserEntity newUserEntity = new UserEntity();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setUsername(userDTO.getUsername().toLowerCase());
+        newUserEntity.setUsername(userDTO.getUsername().toLowerCase());
         // new user gets initially a generated password
-        newUser.setId(userDTO.getId());
-        newUser.setEmail(userDTO.getEmail());
-        newUser.setPassword(encryptedPassword);
-        newUser.setProfil(userDTO.getProfil());
+        newUserEntity.setId(userDTO.getId());
+        newUserEntity.setEmail(userDTO.getEmail());
+        newUserEntity.setPassword(encryptedPassword);
         // new user is not active
-        newUser.setActivated(true);
+        newUserEntity.setActivated(true);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generatePassword());
+        newUserEntity.setActivationKey(RandomUtil.generatePassword());
         Role role;
         role = roleJpa.findOneByLabelIgnoreCase(userDTO.getRoleLabel()).orElseThrow();
 
         var balance = new BalanceEntity();
-        newUser.setBalance(balance);
+        newUserEntity.setBalance(balance);
         Set<Authority> authorities;
         authorities = authorityJpa.findAllByRoleId(role.getId());
-        newUser.setAuthorities(authorities);
+        newUserEntity.setAuthorities(authorities);
 
 
-        userJpa.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        userJpa.save(newUserEntity);
+        log.debug("Created Information for User: {}", newUserEntity);
+        return newUserEntity;
     }
 
     @Override
-    public User createUser(UserDto userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setEmail(userDTO.getEmail());
-        user.setUsername(userDTO.getUsername().toLowerCase());
-        user.setProfil(userDTO.getProfil());
-
+    public UserEntity createUser(UserDto userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userDTO.getId());
+        userEntity.setEmail(userDTO.getEmail());
+        userEntity.setUsername(userDTO.getUsername().toLowerCase());
         String encryptedPassword = passwordEncoder.encode("1234");
-        user.setPassword(encryptedPassword);
-        user.setActivated(true);
+        userEntity.setPassword(encryptedPassword);
+        userEntity.setActivated(true);
         Role role;
         role = roleJpa.findOneByLabelIgnoreCase(userDTO.getRoleLabel()).orElseThrow();
         if (!userDTO.getAuthoritiesString().isEmpty()) {
@@ -222,13 +218,13 @@ public class UserAdapter implements UserPort {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toSet());
-            user.setRole(role);
-            user.setAuthorities(authorities);
+            userEntity.setRole(role);
+            userEntity.setAuthorities(authorities);
             var balance = new BalanceEntity();
-            user.setBalance(balance);
-            userJpa.save(user);
-            log.debug("Created Information for User: {}", user);
-            return user;
+            userEntity.setBalance(balance);
+            userJpa.save(userEntity);
+            log.debug("Created Information for User: {}", userEntity);
+            return userEntity;
         }else{
             throw new AuthorityException();
         }
@@ -247,14 +243,13 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
-    public User updateUser(UserDto userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setUsername(userDTO.getUsername().toLowerCase());
-        user.setProfil(userDTO.getProfil());
+    public UserEntity updateUser(UserDto userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userDTO.getId());
+        userEntity.setUsername(userDTO.getUsername().toLowerCase());
 
-        user.setPassword(userDTO.getPassword());
-        user.setActivated(true);
+        userEntity.setPassword(userDTO.getPassword());
+        userEntity.setActivated(true);
         if (!userDTO.getAuthoritiesString().isEmpty()) {
             Set<Authority> authorities = userDTO
                     .getAuthoritiesString()
@@ -263,21 +258,21 @@ public class UserAdapter implements UserPort {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toSet());
-            user.setAuthorities(authorities);
-            userJpa.save(user);
-            log.debug("Created Information for User: {}", user);
-            return user;
+            userEntity.setAuthorities(authorities);
+            userJpa.save(userEntity);
+            log.debug("Created Information for User: {}", userEntity);
+            return userEntity;
         }else{
             throw new AuthorityException();
         }
     }
 
 
-    private boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.isActivated()) {
+    private boolean removeNonActivatedUser(UserEntity existingUserEntity) {
+        if (existingUserEntity.isActivated()) {
             return false;
         }
-        userJpa.delete(existingUser);
+        userJpa.delete(existingUserEntity);
         userJpa.flush();
         return true;
     }
@@ -293,12 +288,12 @@ public class UserAdapter implements UserPort {
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String username) {
+    public Optional<UserEntity> getUserWithAuthoritiesByLogin(String username) {
         return userJpa.findOneWithAuthoritiesByUsername(username);
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
+    public Optional<UserEntity> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userJpa::findOneWithAuthoritiesByUsername);
     }
 

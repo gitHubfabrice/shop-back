@@ -3,8 +3,8 @@
  */
 package com.fatechnologies.security.usecase;
 
+import com.fatechnologies.security.adapter.mapper.UserMapper;
 import com.fatechnologies.security.command.ModifyUserCommand;
-import com.fatechnologies.security.domain.dto.UserDto;
 import com.fatechnologies.security.port.UserPort;
 
 
@@ -15,25 +15,16 @@ import com.fatechnologies.security.port.UserPort;
 public class ModifyUserIn implements UseCase<ModifyUserCommand>{
 
 	private final UserPort userPort;
+	private final UserMapper userMapper;
 
 	public ModifyUserIn(UserPort userPort) {
 		this.userPort = userPort;
+		userMapper = UserMapper.INSTANCE;
 	}
 	
 	@Override
 	public void perform(ModifyUserCommand command) {
-		var user = new UserDto();
-        user.setId(command.id());
-        user.setProfil(command.profil());
-        user.getAuthoritiesString(). clear();
-        user.getAuthoritiesString().addAll(command.authorities());
-        user.setEmail(command.email());
-        user.setUsername(command.username());
-        user.setProfil(command.profil());
-        user.setRoleLabel(command.roleLabel());
-        user.setGender(command.gender());
+		var user = userMapper.commandModToDto(command);
 		userPort.save(user);
-		
 	}
-
 }

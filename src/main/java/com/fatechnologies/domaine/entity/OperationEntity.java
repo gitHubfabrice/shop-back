@@ -1,6 +1,7 @@
 package com.fatechnologies.domaine.entity;
 
 import com.fatechnologies.domaine.dto.TypeOperation;
+import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,9 @@ public class OperationEntity {
 	private double amount;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ProspectEntity client;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	private UserEntity user;
 
 	@OneToMany(mappedBy = "pk.operation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<ArticleOperation> articles =new ArrayList<>();
