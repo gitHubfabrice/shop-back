@@ -16,7 +16,7 @@ public interface TransactionService {
 	void withdrawal(TransactionDto dto);
 	void delete(UUID id);
 	List<TransactionDto> getAll();
-	List<TransactionDto> getAllByStatus();
+	List<TransactionDto> getAllByStatus(boolean status);
 
 	void checkingTransaction(UUID id);
 }

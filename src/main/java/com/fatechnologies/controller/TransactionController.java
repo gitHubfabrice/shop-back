@@ -46,9 +46,9 @@ public class TransactionController {
 		return ResponseEntity.ok().body(dtos);
 	}
 
-	@GetMapping(value = "/get-all-checked", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<TransactionDto>> getAllCheck() {
-		var  dtos = transactionService.getAllByStatus();
+	@GetMapping(value = "/get-by-status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TransactionDto>> getAllCheck(@PathVariable("status") boolean status) {
+		var  dtos = transactionService.getAllByStatus(status);
 		return ResponseEntity.ok().body(dtos);
 	}
 

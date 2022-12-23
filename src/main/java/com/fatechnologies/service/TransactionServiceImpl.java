@@ -112,8 +112,8 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDto> getAllByStatus() {
-		var transactions = transactionRepository.findAllByStatus(false);
+	public List<TransactionDto> getAllByStatus(boolean status) {
+		var transactions = transactionRepository.findAllByStatus(status);
 		var dtos = new ArrayList<TransactionDto>();
 
 		for (var transaction : transactions) {
