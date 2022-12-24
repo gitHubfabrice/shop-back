@@ -21,7 +21,6 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,35 +28,22 @@ public class TokenProvider {
 
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private static final String SECRET ="bF7449XF5lc5iz5sW5Y5suX4d7ok4P7jbF7449XF5lc5iz5sW5Y5suX4d7ok4P7j";
-    private static final long VALIDITY_TOKEN_IN_SECOND = 3600;
-    private static final long VALIDITY_TOKEN_IN_SECOND_FOR_REMEMBER_ME = 21600;
     private Key key;
     private static final String AUTHORITIES_KEY = "auth";
-    private long tokenValidityInMilliseconds;
-    private long tokenValidityInMillisecondsForRememberMe;
     private JwtParser jwtParser;
 
 
-    public String createToken(Authentication authentication, boolean rememberMe){
+    public String createToken(Authentication authentication){
         String authorities = authentication
                 .getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
-        long now = new Date().getTime();
-        Date validity;
-        if (rememberMe) {
-            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
-        } else {
-            validity = new Date(now + this.tokenValidityInMilliseconds);
-        }
 
         return Jwts
                 .builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key)
-                .setExpiration(validity)
                 .compact();
     }
 
@@ -91,10 +77,7 @@ public class TokenProvider {
 
         String BASE64_SECRET = Base64.getEncoder().encodeToString(SECRET.getBytes(StandardCharsets.UTF_8));
         var keyByte = Decoders.BASE64.decode(BASE64_SECRET);
-        this.tokenValidityInMillisecondsForRememberMe = 10000 * VALIDITY_TOKEN_IN_SECOND_FOR_REMEMBER_ME;
-        this.tokenValidityInMilliseconds = 10000 * VALIDITY_TOKEN_IN_SECOND;
         key = Keys.hmacShaKeyFor(keyByte);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-
     }
 }
