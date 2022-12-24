@@ -1,14 +1,11 @@
 package com.fatechnologies.security.adapter.repository.jpa;
 
-import com.fatechnologies.domaine.entity.BalanceEntity;
 import com.fatechnologies.security.domain.entity.UserEntity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,8 +20,6 @@ public interface UserJpa extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findOneByActivationKey(String activationKey);
     Optional<UserEntity> findOneByEmailIgnoreCase(String email);
     Optional<UserEntity> findOneByUsernameIgnoreCase(String username);
-    @Query("Select b from UserEntity u Join u.balance b On  b.id = :userId")
-    Optional<BalanceEntity> findOneBalanceByUserId(@Param("userId") UUID userId);
 
     @EntityGraph(attributePaths = "authorities")
     @Cacheable(cacheNames = USERS_BY_USERNAME_CACHE)

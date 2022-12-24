@@ -2,7 +2,7 @@ package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.BalanceDto;
 import com.fatechnologies.domaine.mapper.BalanceMapper;
-import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
+import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.security.exception.BasicException;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,12 +26,12 @@ import java.util.UUID;
 public class BalanceController {
 	private Logger log = LoggerFactory.getLogger(BalanceController.class);
 	@Autowired
-	private UserJpa userJpa;
+	private BalanceRepository balanceRepository;
 	@Autowired
 	private BalanceMapper balanceMapper;
 	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BalanceDto> getAById(@PathVariable("id") UUID id) {
-		var balance = userJpa.findOneBalanceByUserId(id).orElseThrow(BasicException::new);
+		var balance = balanceRepository.findOneBalanceByUserId(id).orElseThrow(BasicException::new);
 		return ResponseEntity.ok().body(balanceMapper.modelToDto(balance));
 	}
 

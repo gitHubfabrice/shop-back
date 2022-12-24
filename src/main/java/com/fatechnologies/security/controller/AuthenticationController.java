@@ -50,7 +50,6 @@ public class AuthenticationController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),

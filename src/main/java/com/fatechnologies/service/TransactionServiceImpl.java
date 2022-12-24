@@ -45,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void balanceToAccountBank(TransactionDto dto) {
 
-		var balance = userJpa.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
+		var balance = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
 
 		//refund of the amount in case of modification
 		balance.deposit(dto.getAmountTemp());
@@ -128,7 +128,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 		var transaction = transactionRepository.findById(id).orElseThrow(BasicException::new);
 		var accountBank = accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		var balance = userJpa.findOneBalanceByUserId(transaction.getUser().getId()).orElseThrow(BasicException::new);
+		var balance = balanceRepository.findOneBalanceByUserId(transaction.getUser().getId()).orElseThrow(BasicException::new);
 		if (balance.getAmount() >= transaction.getAmount()) {
 			accountBank.deposit(transaction.getAmount());
 			balance.withdrawal(transaction.getAmount());

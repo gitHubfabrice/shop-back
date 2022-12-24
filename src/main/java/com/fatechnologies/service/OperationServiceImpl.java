@@ -106,7 +106,7 @@ public class OperationServiceImpl implements OperationService {
 		var client = prospectRepository.findById(dto.getClientId()).orElseThrow(BasicException::new);
 		operation.setClient(client);
 		var clientBalance = balanceRepository.findById(client.getBalance().getId()).orElseThrow(BasicException::new);
-		var userBalance   = userJpa.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
+		var userBalance   = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
 		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEOut-ELED000" + idGen());
 
 		for (ArticleDto art : dto.getArticles()) {
