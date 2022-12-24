@@ -68,6 +68,16 @@ public class ArticleServiceImpl implements ArticleService {
 
 	}
 
+	@Override
+	public double getStockValue() {
+		List<ArticleEntity> articleEntities = articleRepository.findAll();
+		var amount = 0;
+		for (var article : articleEntities) {
+			amount += article.getQuantity() * article.getPrice();
+		}
+		return amount;
+	}
+
 	public int idGen(){
 		var nbre = articleRepository.nbre();
 		if (nbre == 0)

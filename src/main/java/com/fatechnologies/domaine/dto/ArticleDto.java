@@ -26,6 +26,4 @@ public class ArticleDto {
 	private int categoryId;
 	private String categoryLabel;
 
-
-
 }
