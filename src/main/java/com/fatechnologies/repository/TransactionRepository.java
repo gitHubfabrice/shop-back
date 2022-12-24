@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, UUID>{
     List<TransactionEntity> findAllByStatus(boolean status);
+    List<TransactionEntity> findAllByUserId(UUID id);
 
     @Query(value="SELECT max(reference) FROM TransactionEntity")
     int max();

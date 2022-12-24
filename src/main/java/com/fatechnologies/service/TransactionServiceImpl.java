@@ -3,6 +3,7 @@ package com.fatechnologies.service;
 import com.fatechnologies.domaine.dto.TransactionDto;
 import com.fatechnologies.domaine.dto.TypeTransaction;
 import com.fatechnologies.domaine.mapper.TransactionMapper;
+import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.repository.TransactionRepository;
@@ -112,6 +113,34 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
+	public List<TransactionDto> getAllByUserInYear(UUID id) {
+		var transactions = transactionRepository.findAllByUserId(id);
+		var dtos = new ArrayList<TransactionDto>();
+		for (var transaction : transactions) {
+			var dto = transactionMapper.modelToDto(transaction);
+			dto.setAmountTemp(transaction.getAmount());
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	@Override
+	public FinanceCheckPoint getFinanceCheckPoint(UUID id) {
+		var transactions = transactionRepository.findAllByUserId(id);
+		var finance = new FinanceCheckPoint();
+		var now = LocalDateTime.now();
+		for (var transaction : transactions) {
+			if (transaction.getCreatedAt().getMonth().equals(now.getMonth())){
+				finance.moreMonth(transaction.getAmount());
+			}
+			if (transaction.getCreatedAt().getYear() == now.getYear()){
+				finance.moreYear(transaction.getAmount());
+			}
+		}
+		return finance;
+	}
+
+	@Override
 	public List<TransactionDto> getAllByStatus(boolean status) {
 		var transactions = transactionRepository.findAllByStatus(status);
 		var dtos = new ArrayList<TransactionDto>();
@@ -148,5 +177,6 @@ public class TransactionServiceImpl implements TransactionService {
 			return 1;
 		else return transactionRepository.max() + 1;
 	}
+
 
 }

@@ -1,6 +1,7 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.TransactionDto;
+import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 import com.fatechnologies.service.TransactionService;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +45,12 @@ public class TransactionController {
 	public ResponseEntity<List<TransactionDto>> getAll() {
 		var  dtos = transactionService.getAll();
 		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-finance-check-point/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<FinanceCheckPoint> getFinanceCheckPoint(@PathVariable("id") UUID id) {
+		var  financeCheckPoint = transactionService.getFinanceCheckPoint(id);
+		return ResponseEntity.ok().body(financeCheckPoint);
 	}
 
 	@GetMapping(value = "/get-by-status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
