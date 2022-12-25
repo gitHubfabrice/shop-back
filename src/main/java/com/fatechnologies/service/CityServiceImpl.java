@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Setter
@@ -45,6 +46,7 @@ public class CityServiceImpl implements CityService {
 		for (CityEntity e : cities) {
 			dtos.add(cityMapper.modelToDto(e));
 		}
+		dtos.sort(Comparator.comparing(CityDto::getLabel));
 		return dtos;
 
 	}

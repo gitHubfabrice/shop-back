@@ -27,4 +27,5 @@ public class TransactionDto implements Serializable {
 	private boolean status;
 	private boolean direct;
 
+
 }

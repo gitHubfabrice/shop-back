@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -53,6 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 			dto = categoryMapper.modelToDto(category);
 			dtos.add(dto);
 		}
+		dtos.sort(Comparator.comparing(CategoryDto::getLabel));
 		return dtos;
 	}
 
