@@ -1,6 +1,7 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.TransactionDto;
+import com.fatechnologies.domaine.paypod.ChartOption;
 import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 import com.fatechnologies.service.TransactionService;
 import lombok.Getter;
@@ -45,6 +46,12 @@ public class TransactionController {
 	public ResponseEntity<List<TransactionDto>> getAll() {
 		var  dtos = transactionService.getAll();
 		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-chart-option", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ChartOption> getChartOption() {
+		var  dto = transactionService.getOptions();
+		return ResponseEntity.ok().body(dto);
 	}
 
 	@GetMapping(value = "/get-finance-check-point/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

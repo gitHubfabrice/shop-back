@@ -2,7 +2,9 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.TransactionDto;
 import com.fatechnologies.domaine.dto.TypeTransaction;
+import com.fatechnologies.domaine.entity.TransactionEntity;
 import com.fatechnologies.domaine.mapper.TransactionMapper;
+import com.fatechnologies.domaine.paypod.ChartOption;
 import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.BalanceRepository;
@@ -172,6 +174,16 @@ public class TransactionServiceImpl implements TransactionService {
 
 		} else throw new Exception("vérifier votre solde");
 
+	}
+
+	@Override
+	public ChartOption getOptions() {
+		var transactions = transactionRepository.findAll();
+		var charOption = new ChartOption();
+		for (TransactionEntity transaction : transactions) {
+			charOption.cumulus(transaction.getCreatedAt().getMonthValue(), transaction.getAmount());
+		}
+		return charOption;
 	}
 
 	public int idGen(){

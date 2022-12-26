@@ -1,6 +1,7 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.TransactionDto;
+import com.fatechnologies.domaine.paypod.ChartOption;
 import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface TransactionService {
 	FinanceCheckPoint getFinanceCheckPoint(UUID id);
 	List<TransactionDto> getAllByStatus(boolean status);
 	void checkingTransaction(UUID id);
+
+	ChartOption getOptions();
 }
