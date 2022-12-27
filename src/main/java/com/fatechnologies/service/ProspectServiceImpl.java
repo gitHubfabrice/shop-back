@@ -8,6 +8,7 @@ import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.repository.ProspectRepository;
 import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,15 @@ public class ProspectServiceImpl implements ProspectService {
 	@Override
 	public void save(ProspectDto prospectDto) {
 
-		var prospectEntity = prospectMapper.dtoToModel(prospectDto);
-		prospectEntity.setReference(prospectDto.getReference() != null ?  prospectEntity.getReference() : "ART-ELED000" + idGen());
+		var prospect = prospectMapper.dtoToModel(prospectDto);
+		prospect.setLastname(Constants.toUpperCase(prospect.getLastname()));
+		prospect.setFirstname(Constants.toUpperCase(prospect.getFirstname()));
+		prospect.setReference(prospectDto.getReference() != null ?  prospect.getReference() : "ART-ELED000" + idGen());
 		if (prospectDto.getBalanceId() == null){
 			var balance = new BalanceEntity();
-			prospectEntity.setBalance(balance);
+			prospect.setBalance(balance);
 		}
-		prospectRepository.saveAndFlush(prospectEntity);
+		prospectRepository.saveAndFlush(prospect);
 	}
 
 	@Override

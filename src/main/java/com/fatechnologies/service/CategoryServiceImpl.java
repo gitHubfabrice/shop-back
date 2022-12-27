@@ -5,6 +5,7 @@ import com.fatechnologies.domaine.entity.CategoryEntity;
 import com.fatechnologies.domaine.mapper.CategoryMapper;
 import com.fatechnologies.repository.CategoryRepository;
 import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public void save(CategoryDto categoryDto) {
 		var category = categoryMapper.dtoToModel(categoryDto);
+		category.setLabel(Constants.toUpperCase(category.getLabel()));
 		categoryRepository.saveAndFlush(category);
 	}
 

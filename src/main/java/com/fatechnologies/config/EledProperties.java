@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(value = "aguima")
+@ConfigurationProperties(value = "udh")
 @Getter
 @Setter
 public class EledProperties {

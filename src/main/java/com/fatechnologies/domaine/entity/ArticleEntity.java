@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,9 +28,13 @@ public class ArticleEntity {
 	private double price;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private CategoryEntity category;
+	@OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE} )
+	private final Set<FileEntity> files = new HashSet<>();
+
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private UserEntity user;
+
 	public void more(int qty){
 		this.quantity += qty;
 	}

@@ -5,6 +5,7 @@ import com.fatechnologies.domaine.entity.CityEntity;
 import com.fatechnologies.domaine.mapper.CityMapper;
 import com.fatechnologies.repository.CityRepository;
 import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class CityServiceImpl implements CityService {
 	@Override
 	public void save(CityDto dto) {
 		var city = cityMapper.dtoToModel(dto);
+		city.setLabel(Constants.toUpperCase(city.getLabel()));
 		cityRepository.saveAndFlush(city);
 	}
 	@Override

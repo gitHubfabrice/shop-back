@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,4 +28,9 @@ public class ArticleDto {
 	private int categoryId;
 	private String categoryLabel;
 
+	private final Set<FileDto> files;
+
+	public ArticleDto() {
+		files = new HashSet<>();
+	}
 }

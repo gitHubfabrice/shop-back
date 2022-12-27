@@ -10,8 +10,11 @@ import java.util.UUID;
 public class FileDto {
 
 	private UUID id;
+	private int articleId;
 	private String type;
 	private String filename;
 	private String url;
+	private String file;
+	private boolean available;
 
 }

@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -22,5 +19,9 @@ public class FileEntity {
     private String type;
     private String filename;
     private String url;
+    private boolean available;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ArticleEntity article;
 }
 

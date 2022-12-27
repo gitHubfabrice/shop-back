@@ -5,6 +5,7 @@ import com.fatechnologies.domaine.entity.AccountBankEntity;
 import com.fatechnologies.domaine.mapper.AccountBankMapper;
 import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class AccountBankServiceImpl implements AccountBankService {
 	public void save(AccountBankDto accountBankDto) {
 
 		var accountBank = accountBankMapper.dtoToModel(accountBankDto);
+		accountBank.setLabel(Constants.toUpperCase(accountBank.getLabel()));
 		accountBankRepository.saveAndFlush(accountBank);
 	}
 
