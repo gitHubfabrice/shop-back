@@ -10,6 +10,7 @@ public final class Constants {
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "en";
     public static final String COMPTE_PRINCIPAL = "accountPrincipal";
+    public static final String COMPTE_SAVE_MONEY = "saveMoney";
     private Constants() {}
     public static String toUpperCase(String str){
         return  str.substring(0, 1).toUpperCase() + str.substring(1);

@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface AccountBankRepository extends JpaRepository<AccountBankEntity, UUID> {
-    Optional<AccountBankEntity> findOneByReference(String reference);
+    Optional<AccountBankEntity> findOneByReferenceIgnoreCase(String reference);
 }

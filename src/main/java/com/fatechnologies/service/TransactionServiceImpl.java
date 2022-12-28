@@ -80,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public void withdrawal(TransactionDto dto) {
-		var accountBank = accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 
 		//refund of the amount in case of modification
 		accountBank.deposit(dto.getAmountTemp());
@@ -93,6 +93,28 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
 
 		accountBankRepository.saveAndFlush(accountBank);
+		transactionRepository.saveAndFlush(transaction);
+	}
+
+	@Override
+	public void saveMoney(TransactionDto dto) {
+		var accountBankPrincipal = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_SAVE_MONEY).orElseThrow(BasicException::new);
+		var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+		//refund of the amount in case of modification
+		accountBankPrincipal.deposit(dto.getAmountTemp());
+		accountBankSaveMoney.withdrawal(dto.getAmountTemp());
+
+		//deposit the amount
+		accountBankPrincipal.withdrawal(dto.getAmount());
+		accountBankSaveMoney.deposit(dto.getAmount());
+
+		var transaction = transactionMapper.dtoToModel(dto);
+		transaction.setCreatedAt(LocalDateTime.now());
+		transaction.setNature(TypeTransaction.DEBIT);
+		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
+
+		accountBankRepository.saveAndFlush(accountBankSaveMoney);
+		accountBankRepository.saveAndFlush(accountBankPrincipal);
 		transactionRepository.saveAndFlush(transaction);
 	}
 
@@ -161,7 +183,7 @@ public class TransactionServiceImpl implements TransactionService {
 	public void checkingTransaction(UUID id) {
 
 		var transaction = transactionRepository.findById(id).orElseThrow(BasicException::new);
-		var accountBank = accountBankRepository.findOneByReference(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 		var balance = balanceRepository.findOneBalanceByUserId(transaction.getUser().getId()).orElseThrow(BasicException::new);
 		if (balance.getAmount() >= transaction.getAmount()) {
 			accountBank.deposit(transaction.getAmount());

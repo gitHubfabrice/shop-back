@@ -37,6 +37,16 @@ public class TransactionController {
 		transactionService.transfer(data);
 	}
 
+	@PutMapping(value = "/withdraw", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void withdraw(@RequestBody TransactionDto data) {
+		transactionService.withdrawal(data);
+	}
+
+	@PutMapping(value = "/save-money", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void saveMoney(@RequestBody TransactionDto data) {
+		transactionService.saveMoney(data);
+	}
+
 	@PutMapping(value = "/checking/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void checking(@PathVariable("id") UUID id) {
 		transactionService.checkingTransaction(id);

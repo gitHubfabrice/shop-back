@@ -16,6 +16,7 @@ public interface TransactionService {
 	void transfer(TransactionDto dto);
 
 	void withdrawal(TransactionDto dto);
+	void saveMoney(TransactionDto dto);
 	void delete(UUID id);
 	List<TransactionDto> getAll();
 	List<TransactionDto> getAllByUserInYear(UUID id);

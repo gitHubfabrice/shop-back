@@ -35,6 +35,12 @@ public class AccountBankServiceImpl implements AccountBankService {
 	}
 
 	@Override
+	public AccountBankDto getByReference(String reference) {
+		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(reference).orElseThrow(BasicException::new);
+		return accountBankMapper.modelToDto(accountBank);
+	}
+
+	@Override
 	public void save(AccountBankDto accountBankDto) {
 
 		var accountBank = accountBankMapper.dtoToModel(accountBankDto);

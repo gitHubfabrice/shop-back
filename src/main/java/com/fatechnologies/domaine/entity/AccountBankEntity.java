@@ -1,11 +1,13 @@
 package com.fatechnologies.domaine.entity;
 
-import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Setter
@@ -21,8 +23,6 @@ public class AccountBankEntity {
 	private String reference;
 	private String label;
 	private double amount;
-	@ManyToOne(fetch = FetchType.EAGER)
-	private UserEntity user;
 
 
 	public void deposit(double amount){

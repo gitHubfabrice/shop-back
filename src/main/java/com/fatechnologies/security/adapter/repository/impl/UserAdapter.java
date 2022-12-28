@@ -201,9 +201,7 @@ public class UserAdapter implements UserPort {
 
     @Override
     public UserEntity createUser(UserDto userDTO) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userDTO.getId());
-        userEntity.setEmail(userDTO.getEmail());
+        var userEntity = userMapper.dtoToModel(userDTO);
         userEntity.setUsername(userDTO.getUsername().toLowerCase());
         String encryptedPassword = passwordEncoder.encode("1234");
         userEntity.setPassword(encryptedPassword);
@@ -226,7 +224,7 @@ public class UserAdapter implements UserPort {
             log.debug("Created Information for User: {}", userEntity);
             return userEntity;
         }else{
-            throw new AuthorityException();
+            throw new BasicException();
         }
     }
 
