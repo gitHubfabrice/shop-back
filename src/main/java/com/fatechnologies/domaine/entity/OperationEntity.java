@@ -28,6 +28,8 @@ public class OperationEntity {
 	private LocalDate createdAt;
 	private TypeOperation type;
 	private double amount;
+	@Column(columnDefinition = "boolean default false")
+	private boolean status;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ProspectEntity client;
 

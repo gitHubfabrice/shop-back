@@ -40,7 +40,7 @@ public class ArticleEntity {
 	}
 
 	public void less(int qty){
-		this.quantity += qty;
+		this.quantity -= qty;
 	}
 
 }

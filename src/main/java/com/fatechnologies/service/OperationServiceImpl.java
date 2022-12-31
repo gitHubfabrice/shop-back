@@ -14,6 +14,7 @@ import com.fatechnologies.security.exception.Exception;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -200,6 +201,14 @@ public class OperationServiceImpl implements OperationService {
 		if (nbre == 0)
 			return 1;
 		else return articleRepository.max() + 1;
+	}
+	@Scheduled(cron="0 0 * * * *")
+	public void closeOperation(){
+		var operations = operationRepository.findAllByStatus(false);
+		operations.forEach(operation -> {
+			operation.setStatus(true);
+			operationRepository.save(operation);
+		});
 	}
 
 

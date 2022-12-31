@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface OperationRepository extends JpaRepository<OperationEntity, UUID>{
 	List<OperationEntity> findAllByType(TypeOperation type);
+	List<OperationEntity> findAllByStatus(boolean status);
 
 }

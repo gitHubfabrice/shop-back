@@ -20,6 +20,7 @@ public class OperationDto implements Serializable {
 	private String reference;
 	private LocalDate createdAt;
 	private TypeOperation type;
+	private boolean status;
 	private double amount;
 	private double amountTemp;
 	private UUID clientBalanceId;
