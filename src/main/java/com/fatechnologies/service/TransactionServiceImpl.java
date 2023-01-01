@@ -11,7 +11,6 @@ import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.repository.TransactionRepository;
 import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
 import com.fatechnologies.security.exception.BasicException;
-import com.fatechnologies.security.exception.Exception;
 import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
@@ -184,18 +183,10 @@ public class TransactionServiceImpl implements TransactionService {
 
 		var transaction = transactionRepository.findById(id).orElseThrow(BasicException::new);
 		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		var balance = balanceRepository.findOneBalanceByUserId(transaction.getUser().getId()).orElseThrow(BasicException::new);
-		if (balance.getAmount() >= transaction.getAmount()) {
 			accountBank.deposit(transaction.getAmount());
-			balance.withdrawal(transaction.getAmount());
 			transaction.setStatus(true);
-
 			accountBankRepository.saveAndFlush(accountBank);
-			balanceRepository.saveAndFlush(balance);
 			transactionRepository.saveAndFlush(transaction);
-
-		} else throw new Exception("vérifier votre solde");
-
 	}
 
 	@Override
