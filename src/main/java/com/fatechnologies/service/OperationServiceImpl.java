@@ -202,7 +202,7 @@ public class OperationServiceImpl implements OperationService {
 			return 1;
 		else return articleRepository.max() + 1;
 	}
-	@Scheduled(cron="0 0 * * * *")
+	@Scheduled(cron="0 0 0 * * *")
 	public void closeOperation(){
 		var operations = operationRepository.findAllByStatus(false);
 		operations.forEach(operation -> {
