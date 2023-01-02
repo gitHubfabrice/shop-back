@@ -27,7 +27,7 @@ public class TransactionController {
 	@Autowired
 	private TransactionService transactionService;
 
-	@PostMapping(value = "/balance-to-account-bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/balance-to-account-bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void balanceToAccountBank(@RequestBody TransactionDto data) {
 		transactionService.balanceToAccountBank(data);
 	}

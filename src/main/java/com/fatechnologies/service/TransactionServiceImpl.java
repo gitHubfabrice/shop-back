@@ -81,14 +81,12 @@ public class TransactionServiceImpl implements TransactionService {
 	public void withdrawal(TransactionDto dto) {
 		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
 
-		//refund of the amount in case of modification
-		accountBank.deposit(dto.getAmountTemp());
-
 		//deposit the amount
 		accountBank.withdrawal(dto.getAmount());
 		var transaction = transactionMapper.dtoToModel(dto);
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
+		transaction.setStatus(true);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
 
 		accountBankRepository.saveAndFlush(accountBank);
@@ -97,11 +95,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public void saveMoney(TransactionDto dto) {
-		var accountBankPrincipal = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_SAVE_MONEY).orElseThrow(BasicException::new);
-		var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-		//refund of the amount in case of modification
-		accountBankPrincipal.deposit(dto.getAmountTemp());
-		accountBankSaveMoney.withdrawal(dto.getAmountTemp());
+		var accountBankPrincipal = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+		var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_SAVE_MONEY).orElseThrow(BasicException::new);
 
 		//deposit the amount
 		accountBankPrincipal.withdrawal(dto.getAmount());
@@ -110,6 +105,7 @@ public class TransactionServiceImpl implements TransactionService {
 		var transaction = transactionMapper.dtoToModel(dto);
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
+		transaction.setStatus(true);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
 
 		accountBankRepository.saveAndFlush(accountBankSaveMoney);

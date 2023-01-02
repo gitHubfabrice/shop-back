@@ -33,6 +33,14 @@ public class AccountBankController {
 		return ResponseEntity.ok().body(accountBankDto);
 	}
 
+
+
+	@GetMapping(value = "/get-by-reference/{reference}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AccountBankDto> getByReference(@PathVariable("reference") String reference) {
+		var accountBankDto = accountBankService.getByReference(reference);
+		return ResponseEntity.ok().body(accountBankDto);
+	}
+
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void create(@RequestBody AccountBankDto compte) {
 		accountBankService.save(compte);
