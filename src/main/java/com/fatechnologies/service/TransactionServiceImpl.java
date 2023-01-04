@@ -59,7 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.CREDIT);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
-		transaction.setLabel("Transfer balance to account");
+		transaction.setLabel("Transfer");
 		balanceRepository.saveAndFlush(balance);
 		transactionRepository.saveAndFlush(transaction);
 	}
@@ -138,7 +138,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public List<TransactionDto> getAllByUserInYear(UUID id) {
-		var transactions = transactionRepository.findAllByUserId(id);
+		var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION);
 		var dtos = new ArrayList<TransactionDto>();
 		for (var transaction : transactions) {
 			var dto = transactionMapper.modelToDto(transaction);
@@ -151,7 +151,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public FinanceCheckPoint getFinanceCheckPoint(UUID id) {
-		var transactions = transactionRepository.findAllByUserId(id);
+		var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION);
 		var finance = new FinanceCheckPoint();
 		var now = LocalDateTime.now();
 		for (var transaction : transactions) {
@@ -194,7 +194,11 @@ public class TransactionServiceImpl implements TransactionService {
 		var transactions = transactionRepository.findAll();
 		var charOption = new ChartOption();
 		for (TransactionEntity transaction : transactions) {
-			charOption.cumulus(transaction.getCreatedAt().getMonthValue(), transaction.getAmount());
+			if (transaction.getNature().equals(TypeTransaction.DEBIT))
+				charOption.cumulus(transaction.getCreatedAt().getMonthValue(),0, transaction.getAmount());
+
+			if (transaction.getNature().equals(TypeTransaction.CREDIT))
+				charOption.cumulus(transaction.getCreatedAt().getMonthValue(),transaction.getAmount(), 0);
 		}
 		return charOption;
 	}
