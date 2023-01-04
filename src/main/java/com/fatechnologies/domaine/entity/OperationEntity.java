@@ -9,6 +9,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class OperationEntity {
 	@UuidGenerator
 	private UUID id;
 	private String reference;
-	private LocalDate createdAt;
+	private LocalDate date;
+	private LocalDateTime createdAt;
 	private TypeOperation type;
 	private double amount;
 	@Column(columnDefinition = "boolean default false")

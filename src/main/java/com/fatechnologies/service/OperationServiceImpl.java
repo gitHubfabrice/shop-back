@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
@@ -92,6 +93,7 @@ public class OperationServiceImpl implements OperationService {
 		operation.getArticles().clear();
 		operation.getArticles().addAll(artLiv);
 		operation.setAmount(amount);
+		operation.setCreatedAt(LocalDateTime.now());
 
 		operationRepository.saveAndFlush(operation);
 	}
@@ -142,7 +144,7 @@ public class OperationServiceImpl implements OperationService {
 		clientBalance.deposit(amount);
 		userBalance.withdrawal(dto.getAmountTemp());
 		userBalance.deposit(amount);
-
+		operation.setCreatedAt(LocalDateTime.now());
 		balanceRepository.save(userBalance);
 		balanceRepository.save(clientBalance);
 		operationRepository.saveAndFlush(operation);

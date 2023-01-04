@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,8 @@ public class OperationDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private UUID id;
 	private String reference;
-	private LocalDate createdAt;
+	private LocalDate date;
+	private LocalDateTime createdAt;
 	private TypeOperation type;
 	private boolean status;
 	private double amount;
