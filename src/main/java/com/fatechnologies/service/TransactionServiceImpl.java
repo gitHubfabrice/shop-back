@@ -59,16 +59,17 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.CREDIT);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
-
+		transaction.setLabel("Transfer balance to account");
 		balanceRepository.saveAndFlush(balance);
 		transactionRepository.saveAndFlush(transaction);
 	}
 
 	@Override
-	public void transfer(TransactionDto dto) {
+	public void deposit(TransactionDto dto) {
 		var transaction = transactionMapper.dtoToModel(dto);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
-
+		transaction.setLabel("Transfer direct");
+		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setDirect(true);
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.CREDIT);
@@ -83,7 +84,9 @@ public class TransactionServiceImpl implements TransactionService {
 
 		//deposit the amount
 		accountBank.withdrawal(dto.getAmount());
+
 		var transaction = transactionMapper.dtoToModel(dto);
+		transaction.setLabel(Constants.toUpperCase(transaction.getLabel()));
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
 		transaction.setStatus(true);
@@ -103,9 +106,11 @@ public class TransactionServiceImpl implements TransactionService {
 		accountBankSaveMoney.deposit(dto.getAmount());
 
 		var transaction = transactionMapper.dtoToModel(dto);
+
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
 		transaction.setStatus(true);
+		transaction.setLabel("Epargne");
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
 
 		accountBankRepository.saveAndFlush(accountBankSaveMoney);

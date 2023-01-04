@@ -13,7 +13,7 @@ public interface TransactionService {
 
 	void balanceToAccountBank(TransactionDto dto);
 
-	void transfer(TransactionDto dto);
+	void deposit(TransactionDto dto);
 
 	void withdrawal(TransactionDto dto);
 	void saveMoney(TransactionDto dto);

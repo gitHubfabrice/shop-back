@@ -32,9 +32,9 @@ public class TransactionController {
 		transactionService.balanceToAccountBank(data);
 	}
 	
-	@PutMapping(value = "/transfer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/deposit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void transfer(@RequestBody TransactionDto data) {
-		transactionService.transfer(data);
+		transactionService.deposit(data);
 	}
 
 	@PutMapping(value = "/withdraw", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
