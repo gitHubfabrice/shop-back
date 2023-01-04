@@ -73,7 +73,6 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setDirect(true);
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.CREDIT);
-		transaction.setStatus(true);
 
 		transactionRepository.saveAndFlush(transaction);
 	}
