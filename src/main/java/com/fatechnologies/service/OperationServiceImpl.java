@@ -68,7 +68,7 @@ public class OperationServiceImpl implements OperationService {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEIn-ELED000" + idGen());
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  String.valueOf(idGen()));
 		for (ArticleDto art : dto.getArticles()) {
 			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
@@ -107,7 +107,7 @@ public class OperationServiceImpl implements OperationService {
 		operation.setClient(client);
 		var clientBalance = balanceRepository.findById(client.getBalance().getId()).orElseThrow(BasicException::new);
 		var userBalance   = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  "OPEOut-ELED000" + idGen());
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  String.valueOf(idGen()));
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
@@ -199,10 +199,10 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	public int idGen(){
-		var nbre = articleRepository.nbre();
+		var nbre = operationRepository.nbre();
 		if (nbre == 0)
 			return 1;
-		else return articleRepository.max() + 1;
+		else return operationRepository.max() + 1;
 	}
 	@Scheduled(cron="0 0 0 * * *")
 	public void closeOperation(){

@@ -60,7 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
 		var transaction  = transactionMapper.dtoToModel(dto);
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.CREDIT);
-		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
+		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(idGen()));
 		transaction.setLabel("Transfer");
 		balanceRepository.saveAndFlush(balance);
 		transactionRepository.saveAndFlush(transaction);
@@ -69,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void deposit(TransactionDto dto) {
 		var transaction = transactionMapper.dtoToModel(dto);
-		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
+		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(idGen()));
 		transaction.setLabel("Transfer direct");
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setDirect(true);
@@ -91,7 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setLabel(Constants.toUpperCase(transaction.getLabel()));
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
-		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
+		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(idGen()));
 
 		accountBankRepository.saveAndFlush(accountBank);
 		transactionRepository.saveAndFlush(transaction);
@@ -116,7 +116,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setNature(TypeTransaction.CREDIT);
 		transaction.setStatus(true);
 		transaction.setLabel("Epargne");
-		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
+		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(idGen()));
 
 		accountBankRepository.saveAndFlush(accountBankSaveMoney);
 		accountBankRepository.saveAndFlush(accountBankPrincipal);
