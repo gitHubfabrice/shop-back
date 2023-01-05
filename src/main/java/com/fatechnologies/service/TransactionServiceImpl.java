@@ -91,6 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setLabel(Constants.toUpperCase(transaction.getLabel()));
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
+		transaction.setStatus(true);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(idGen()));
 
 		accountBankRepository.saveAndFlush(accountBank);
