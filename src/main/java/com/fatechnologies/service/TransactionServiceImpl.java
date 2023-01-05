@@ -43,7 +43,9 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public TransactionDto getById(UUID id) {
 		var operation = transactionRepository.findById(id).orElseThrow(BasicException::new);
-		return transactionMapper.modelToDto(operation);
+		var dto = transactionMapper.modelToDto(operation);
+		dto.setAmountTemp(operation.getAmount());
+		return dto;
 	}
 	@Override
 	public void balanceToAccountBank(TransactionDto dto) {
@@ -80,7 +82,8 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void withdrawal(TransactionDto dto) {
 		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-
+		//
+		accountBank.deposit(dto.getAmountTemp());
 		//deposit the amount
 		accountBank.withdrawal(dto.getAmount());
 
@@ -88,7 +91,6 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setLabel(Constants.toUpperCase(transaction.getLabel()));
 		transaction.setCreatedAt(LocalDateTime.now());
 		transaction.setNature(TypeTransaction.DEBIT);
-		transaction.setStatus(true);
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
 
 		accountBankRepository.saveAndFlush(accountBank);
@@ -101,13 +103,17 @@ public class TransactionServiceImpl implements TransactionService {
 		var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_SAVE_MONEY).orElseThrow(BasicException::new);
 
 		//deposit the amount
+		accountBankPrincipal.deposit(dto.getAmountTemp());
+		accountBankSaveMoney.withdrawal(dto.getAmountTemp());
+
+		//deposit the amount
 		accountBankPrincipal.withdrawal(dto.getAmount());
 		accountBankSaveMoney.deposit(dto.getAmount());
 
 		var transaction = transactionMapper.dtoToModel(dto);
 
 		transaction.setCreatedAt(LocalDateTime.now());
-		transaction.setNature(TypeTransaction.DEBIT);
+		transaction.setNature(TypeTransaction.CREDIT);
 		transaction.setStatus(true);
 		transaction.setLabel("Epargne");
 		transaction.setReference(transaction.getReference() != null ? transaction.getReference() : String.valueOf(10000 + idGen()));
@@ -178,6 +184,49 @@ public class TransactionServiceImpl implements TransactionService {
 		dtos.sort(Comparator.comparing(TransactionDto::getCreatedAt).reversed());
 		return dtos;
 	}
+
+	@Override
+	public List<TransactionDto> getAllDebit() {
+		var transactions = transactionRepository.findAllDebit();
+		var dtos = new ArrayList<TransactionDto>();
+
+		for (var transaction : transactions) {
+			var dto = transactionMapper.modelToDto(transaction);
+			dto.setAmountTemp(transaction.getAmount());
+			dtos.add(dto);
+		}
+		dtos.sort(Comparator.comparing(TransactionDto::getCreatedAt).reversed());
+		return dtos;
+	}
+
+	@Override
+	public List<TransactionDto> getAllCredit(boolean direct) {
+		var transactions = transactionRepository.findAllCredit(direct);
+		var dtos = new ArrayList<TransactionDto>();
+
+		for (var transaction : transactions) {
+			var dto = transactionMapper.modelToDto(transaction);
+			dto.setAmountTemp(transaction.getAmount());
+			dtos.add(dto);
+		}
+		dtos.sort(Comparator.comparing(TransactionDto::getCreatedAt).reversed());
+		return dtos;
+	}
+
+	@Override
+	public List<TransactionDto> getAllByLabel(String label) {
+		var transactions = transactionRepository.findAllByLabelIgnoreCase(label);
+		var dtos = new ArrayList<TransactionDto>();
+
+		for (var transaction : transactions) {
+			var dto = transactionMapper.modelToDto(transaction);
+			dto.setAmountTemp(transaction.getAmount());
+			dtos.add(dto);
+		}
+		dtos.sort(Comparator.comparing(TransactionDto::getCreatedAt).reversed());
+		return dtos;
+	}
+
 	@Override
 	public void checkingTransaction(UUID id) {
 

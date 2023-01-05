@@ -26,6 +26,12 @@ public class TransactionController {
 
 	@Autowired
 	private TransactionService transactionService;
+	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TransactionDto> getById(@PathVariable("id") UUID id) {
+		var  dtos = transactionService.getById(id);
+		return ResponseEntity.ok().body(dtos);
+	}
+
 
 	@PutMapping(value = "/balance-to-account-bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void balanceToAccountBank(@RequestBody TransactionDto data) {
@@ -55,6 +61,24 @@ public class TransactionController {
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<TransactionDto>> getAll() {
 		var  dtos = transactionService.getAll();
+		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-all-debit", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TransactionDto>> getAllDebit() {
+		var  dtos = transactionService.getAllDebit();
+		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-all-credit/{direct}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TransactionDto>> getAllCredit(@PathVariable("direct") Boolean direct) {
+		var  dtos = transactionService.getAllCredit(direct);
+		return ResponseEntity.ok().body(dtos);
+	}
+
+	@GetMapping(value = "/get-all-by-label/{label}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TransactionDto>> getAllByLabel(@PathVariable("label") String label) {
+		var  dtos = transactionService.getAllByLabel(label);
 		return ResponseEntity.ok().body(dtos);
 	}
 

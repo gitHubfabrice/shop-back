@@ -13,6 +13,7 @@ public class AccountBankDto {
 	private String reference;
 	private String label;
 	private double amount;
+	private double amountLast;
 	
 	private Long clientId;
 
