@@ -114,7 +114,7 @@ public class OperationServiceImpl implements OperationService {
 			if(articleOptional.isPresent()){
 
 				//vérifions si l'article est disponible en stock
-				if (articleOptional.get().getQuantity() < art.getQuantityArtDel() + art.getQuantityTemp()) {
+				if (articleOptional.get().getQuantity() + art.getQuantityTemp() < art.getQuantityTemp()) {
 					throw new Exception("Vérifiez votre stock de marchandise");
 				}
 
