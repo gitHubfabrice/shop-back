@@ -114,7 +114,7 @@ public class OperationServiceImpl implements OperationService {
 			if(articleOptional.isPresent()){
 
 				//vérifions si l'article est disponible en stock
-				if (articleOptional.get().getQuantity() + art.getQuantityTemp() < art.getQuantityTemp()) {
+				if (articleOptional.get().getQuantity() + art.getQuantityTemp() < art.getQuantityArtDel()) {
 					throw new Exception("Vérifiez votre stock de marchandise");
 				}
 
@@ -145,8 +145,8 @@ public class OperationServiceImpl implements OperationService {
 		userBalance.withdrawal(dto.getAmountTemp());
 		userBalance.deposit(amount);
 		operation.setCreatedAt(LocalDateTime.now());
-		balanceRepository.save(userBalance);
-		balanceRepository.save(clientBalance);
+		balanceRepository.saveAndFlush(userBalance);
+		balanceRepository.saveAndFlush(clientBalance);
 		operationRepository.saveAndFlush(operation);
 	}
 
