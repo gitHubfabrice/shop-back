@@ -54,7 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
 	public void balanceToAccountBank(TransactionDto dto) {
 
 		var balance = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
-		var operations = operationRepository.findAllByUserAndStatus(dto.getUserId(), false);
+		var operations = operationRepository.findAllByUserIdAndStatus(dto.getUserId(), false);
 		operations.forEach(operation ->{
 			operation.setStatus(true);
 			operationRepository.saveAndFlush(operation);
