@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface OperationRepository extends JpaRepository<OperationEntity, UUID>{
 	List<OperationEntity> findAllByType(TypeOperation type);
 	List<OperationEntity> findAllByStatus(boolean status);
+	List<OperationEntity> findAllByUserAndStatus(UUID userId, boolean status);
 
 	@Query(value="SELECT max(reference) FROM OperationEntity")
 	int max();

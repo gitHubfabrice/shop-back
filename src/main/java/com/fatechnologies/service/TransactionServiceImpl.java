@@ -8,6 +8,7 @@ import com.fatechnologies.domaine.paypod.ChartOption;
 import com.fatechnologies.domaine.paypod.FinanceCheckPoint;
 import com.fatechnologies.repository.AccountBankRepository;
 import com.fatechnologies.repository.BalanceRepository;
+import com.fatechnologies.repository.OperationRepository;
 import com.fatechnologies.repository.TransactionRepository;
 import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
 import com.fatechnologies.security.exception.BasicException;
@@ -37,6 +38,8 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	private BalanceRepository balanceRepository;
 	@Autowired
+	private OperationRepository operationRepository;
+	@Autowired
 	private TransactionMapper transactionMapper;
 	@Autowired
 	private UserJpa userJpa;
@@ -51,6 +54,11 @@ public class TransactionServiceImpl implements TransactionService {
 	public void balanceToAccountBank(TransactionDto dto) {
 
 		var balance = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
+		var operations = operationRepository.findAllByUserAndStatus(dto.getUserId(), false);
+		operations.forEach(operation ->{
+			operation.setStatus(true);
+			operationRepository.saveAndFlush(operation);
+		});
 
 		//refund of the amount in case of modification
 		balance.deposit(dto.getAmountTemp());
