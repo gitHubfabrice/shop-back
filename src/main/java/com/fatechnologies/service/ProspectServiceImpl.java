@@ -70,7 +70,7 @@ public class ProspectServiceImpl implements ProspectService {
 			dtos.add(dto);
 			
 		}
-		dtos.sort(Comparator.comparing(ProspectDto::getBalanceAmount).thenComparing(ProspectDto::getBalanceAmount));
+		dtos.sort(Comparator.comparing(ProspectDto::getBalanceAmount).thenComparing(ProspectDto::getBalanceAmount).reversed());
 		return dtos;
 	}
 
