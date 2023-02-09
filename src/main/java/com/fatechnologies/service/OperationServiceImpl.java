@@ -82,6 +82,7 @@ public class OperationServiceImpl implements OperationService {
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
 
 				//mise à jour du stock
+				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
 				articleOptional.get().less(art.getQuantityTemp());
 				articleOptional.get().more(art.getQuantityArtDel());
 
@@ -127,6 +128,7 @@ public class OperationServiceImpl implements OperationService {
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
 
 				//mise à jour du stock
+				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
 				articleOptional.get().more(art.getQuantityTemp());
 				articleOptional.get().less(art.getQuantityArtDel());
 				articleRepository.saveAndFlush(articleOptional.get());

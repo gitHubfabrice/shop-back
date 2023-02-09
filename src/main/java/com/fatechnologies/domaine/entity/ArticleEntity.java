@@ -22,6 +22,8 @@ public class ArticleEntity {
 	private String reference;
 	private String label;
 	private int quantity;
+	@Column(columnDefinition = "integer default 0")
+	private int quantityOld;
 	private String description;
 	private boolean published;
 	private LocalDateTime createdAt;

@@ -14,6 +14,7 @@ public class ArticleDto {
 	private String reference;
 	private String label;
 	private int quantity;
+	private int quantityOld;
 	private int quantityArtDel;
 	private int quantityTemp;
 	private double priceArtDel;
