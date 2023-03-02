@@ -22,8 +22,8 @@ public class Month {
         switch (i) {
             case 1  -> this.january += amount;
             case 2  -> this.february += amount;
-            case 3  -> this.april += amount;
-            case 4  -> this.march += amount;
+            case 3  -> this.march += amount;
+            case 4  -> this.april += amount;
             case 5  -> this.may += amount;
             case 6  -> this.june += amount;
             case 7  -> this.july += amount;
