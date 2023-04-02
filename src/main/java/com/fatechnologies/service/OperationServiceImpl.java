@@ -14,6 +14,7 @@ import com.fatechnologies.security.exception.Exception;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +65,8 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
+	@Async
+
 	public void inStock(OperationDto dto) {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
@@ -72,9 +75,10 @@ public class OperationServiceImpl implements OperationService {
 		for (ArticleDto art : dto.getArticles()) {
 			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
+				var article = articleOptional.get();
 
 				ArticleOperation ao = new ArticleOperation();
-				ao.setArticle(articleOptional.get());
+				ao.setArticle(article);
 				ao.setOperation(operation);
 				ao.setType(operation.getType());
 				ao.setQuantity(art.getQuantityArtDel());
@@ -82,11 +86,11 @@ public class OperationServiceImpl implements OperationService {
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
 
 				//mise à jour du stock
-				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
-				articleOptional.get().less(art.getQuantityTemp());
-				articleOptional.get().more(art.getQuantityArtDel());
+				article.setQuantityOld(article.getQuantity());
+				article.less(art.getQuantityTemp());
+				article.more(art.getQuantityArtDel());
 
-				articleRepository.saveAndFlush(articleOptional.get());
+				articleRepository.saveAndFlush(article);
 				artLiv.add(ao);
 			}
 		}
