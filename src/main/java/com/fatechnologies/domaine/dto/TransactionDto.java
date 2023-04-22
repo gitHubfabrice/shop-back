@@ -15,7 +15,7 @@ public class TransactionDto implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private UUID id;
-	private String reference;
+	private Integer reference;
 	private String label;
 	private double amount;
 	private double amountTemp;

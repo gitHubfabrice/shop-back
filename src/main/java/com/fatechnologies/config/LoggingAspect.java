@@ -73,7 +73,7 @@ public class LoggingAspect {
     }
   }
 
-  @Around("@annotation(com.cinetpay.billing.adapter.config.LogExecutionTime)")
+  @Around("@annotation(com.fatechnologies.config.LogExecutionTime)")
   public Object logTimeExecution(ProceedingJoinPoint joinPoint) throws Throwable {
     MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 

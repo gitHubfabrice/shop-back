@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface TransactionService {
 	 
 	TransactionDto getById(UUID id);
+	void save(TransactionDto dto);
 
 	void balanceToAccountBank(TransactionDto dto);
 

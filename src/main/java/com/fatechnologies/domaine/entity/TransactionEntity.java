@@ -22,7 +22,7 @@ public class TransactionEntity {
 	@GeneratedValue
 	@UuidGenerator
 	private UUID id;
-	private String reference;
+	private Integer reference;
 	private String label;
 	private double amount;
 	private TypeTransaction nature;

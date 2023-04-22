@@ -4,7 +4,7 @@ import com.fatechnologies.security.adapter.repository.jpa.RoleJpa;
 import com.fatechnologies.security.command.CreateRoleCommand;
 import com.fatechnologies.security.command.ModifyRoleCommand;
 import com.fatechnologies.security.domain.dto.RoleDto;
-import com.fatechnologies.security.interactor.RoleInteractor;
+import com.fatechnologies.security.interactor.RoleInteract;
 import com.fatechnologies.security.port.RolePort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ import java.util.UUID;
 public class RoleController {
 
 	private final RoleJpa roleJpa;
-    private final RoleInteractor roleInteractor;
+    private final RoleInteract roleInteract;
     private final RolePort rolePort;
 
-	public RoleController(RoleJpa roleJpa, RoleInteractor roleInteractor, RolePort rolePort) {
+	public RoleController(RoleJpa roleJpa, RoleInteract roleInteract, RolePort rolePort) {
 		this.roleJpa = roleJpa;
-        this.roleInteractor = roleInteractor;
+        this.roleInteract = roleInteract;
         this.rolePort = rolePort;
     }
 
@@ -39,12 +39,12 @@ public class RoleController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void createRole( @RequestBody CreateRoleCommand command){
-        roleInteractor.createRole(command);
+        roleInteract.createRole(command);
     }
 
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateRole( @RequestBody ModifyRoleCommand command) {
-        roleInteractor.updateRole(command);
+        roleInteract.updateRole(command);
     }
 
     @GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)

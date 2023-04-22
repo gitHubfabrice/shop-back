@@ -18,11 +18,12 @@ public class OperationDto implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private UUID id;
-	private String reference;
+	private Integer reference;
 	private LocalDate date;
 	private LocalDateTime createdAt;
 	private TypeOperation type;
 	private boolean status;
+	private boolean debtor;
 	private double amount;
 	private double amountTemp;
 	private UUID clientBalanceId;

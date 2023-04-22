@@ -23,7 +23,7 @@ public class Vendor {
 	private String firstname;
 	private String code;
 	private String email;
-	private String adresse;
+	private String address;
 	private String contact;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

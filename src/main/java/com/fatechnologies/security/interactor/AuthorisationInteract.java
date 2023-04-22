@@ -6,7 +6,7 @@ import com.fatechnologies.security.command.ModifyAuthorityCommand;
 /**
  * Auteur: fabrice ASSAGOU 7 mars 2022
  */
-public interface AutorisationInteractor {
+public interface AuthorisationInteract {
 
 	void createAuthority(CreateAuthorityCommand command);
 	void updateAuthority(ModifyAuthorityCommand command);

@@ -4,11 +4,12 @@ import com.fatechnologies.domaine.dto.AccountBankDto;
 import com.fatechnologies.domaine.entity.AccountBankEntity;
 import com.fatechnologies.domaine.mapper.AccountBankMapper;
 import com.fatechnologies.repository.AccountBankRepository;
+import com.fatechnologies.repository.OperationRepository;
 import com.fatechnologies.security.exception.BasicException;
+import com.fatechnologies.security.exception.Exception;
 import com.fatechnologies.security.utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,11 +23,16 @@ import java.util.UUID;
 @Transactional
 public class AccountBankServiceImpl implements AccountBankService {
 
-	@Autowired
-	private AccountBankRepository accountBankRepository;
+	private final AccountBankRepository accountBankRepository;
 
-	@Autowired
-	private AccountBankMapper accountBankMapper;
+	private final AccountBankMapper accountBankMapper;
+	private final OperationRepository operationRepository;
+
+	public AccountBankServiceImpl(AccountBankRepository accountBankRepository, AccountBankMapper accountBankMapper, OperationRepository operationRepository) {
+		this.accountBankRepository = accountBankRepository;
+		this.accountBankMapper = accountBankMapper;
+		this.operationRepository = operationRepository;
+	}
 
 	@Override
 	public AccountBankDto getById(UUID id) {
@@ -38,6 +44,24 @@ public class AccountBankServiceImpl implements AccountBankService {
 	public AccountBankDto getByReference(String reference) {
 		var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(reference).orElseThrow(BasicException::new);
 		return accountBankMapper.modelToDto(accountBank);
+	}
+
+	@Override
+	public void debitBankAccount(UUID operationId) {
+		var operation = operationRepository.findById(operationId);
+		operation.ifPresent(op -> {
+			if (op.isDebtor()){
+				return;
+			}
+			var accountBank = accountBankRepository
+							.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL)
+							.orElseThrow(() -> new Exception("Veuillez contacter l'administrateur"));
+			accountBank.withdrawal(op.getAmount());
+			op.setStatus(true);
+			op.setDebtor(true);
+			operationRepository.saveAndFlush(op);
+			accountBankRepository.saveAndFlush(accountBank);
+		});
 	}
 
 	@Override

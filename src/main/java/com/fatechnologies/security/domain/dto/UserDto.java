@@ -1,6 +1,6 @@
 package com.fatechnologies.security.domain.dto;
 
-import com.fatechnologies.security.domain.entity.Profil;
+import com.fatechnologies.security.domain.entity.Profile;
 import com.fatechnologies.security.domain.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 @Getter
 @Setter
-public class UserDto extends Profil {
+public class UserDto extends Profile {
     private UUID id;
     private String username;
     private String password;

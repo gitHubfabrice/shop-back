@@ -2,32 +2,26 @@ package com.fatechnologies.controller;
 
 import com.fatechnologies.command.ArticleCommand;
 import com.fatechnologies.domaine.dto.ArticleDto;
-import com.fatechnologies.interactor.ArticleInteractor;
+import com.fatechnologies.interactor.ArticleInteract;
 import com.fatechnologies.service.ArticleService;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Getter
-@Setter
 @RestController
-@NoArgsConstructor
 @RequestMapping("shop/article")
 public class ArticleController {
-	private Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-	@Autowired
-	private ArticleService articleService;
-	@Autowired
-	private ArticleInteractor articleInteractor;
+	private final ArticleService articleService;
+	private final ArticleInteract articleInteract;
+
+	public ArticleController(@Qualifier("articleServiceImpl") ArticleService articleService, ArticleInteract articleInteract) {
+		this.articleService = articleService;
+		this.articleInteract = articleInteract;
+	}
 
 	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ArticleDto> findById(@PathVariable("id") int id) {
@@ -37,12 +31,12 @@ public class ArticleController {
 
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void create(@RequestBody ArticleCommand command) {
-		 articleInteractor.create(command);
+		 articleInteract.create(command);
 	}
 
 	@PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void update(@RequestBody ArticleCommand command) {
-		articleInteractor.update(command);
+		articleInteract.update(command);
 	}
 
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)

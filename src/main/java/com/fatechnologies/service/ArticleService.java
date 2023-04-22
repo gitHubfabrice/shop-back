@@ -12,4 +12,5 @@ public interface ArticleService {
 	List<ArticleDto> getAll();
 	double getStockValue();
 	int idGen();
+	void updateInventory(String action,Integer articleId, int quantityTemp, int quantity);
 }

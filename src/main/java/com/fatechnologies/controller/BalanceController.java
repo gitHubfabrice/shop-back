@@ -4,10 +4,6 @@ import com.fatechnologies.domaine.dto.BalanceDto;
 import com.fatechnologies.domaine.mapper.BalanceMapper;
 import com.fatechnologies.repository.BalanceRepository;
 import com.fatechnologies.security.exception.BasicException;
-import lombok.Getter;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("shop/balance")
-@Getter
-@Setter
-
 public class BalanceController {
-	private Logger log = LoggerFactory.getLogger(BalanceController.class);
 	@Autowired
 	private BalanceRepository balanceRepository;
 	@Autowired
