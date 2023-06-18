@@ -9,8 +9,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountBankMapper {
-
-
 	AccountBankDto modelToDto(final AccountBankEntity source);
 	List<AccountBankDto> modelToDto(final List<AccountBankEntity> sources);
 

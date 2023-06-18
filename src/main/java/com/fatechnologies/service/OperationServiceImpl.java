@@ -5,6 +5,7 @@ import com.fatechnologies.domaine.dto.OperationDto;
 import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.ArticleOperation;
+import com.fatechnologies.domaine.entity.OperationEntity;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
 import com.fatechnologies.repository.*;
@@ -13,11 +14,11 @@ import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -26,22 +27,28 @@ import java.util.*;
 @Service
 @Transactional
 public class OperationServiceImpl implements OperationService {
-	@Autowired
-	private OperationRepository operationRepository;
-	@Autowired
-	private OperationMapper operationMapper;
-	@Autowired
-	private ArticleRepository articleRepository;
-	@Autowired
-	private ArticleMapper articleMapper;
-	@Autowired
-	private AccountBankRepository accountBankRepository;
-	@Autowired
-	private BalanceRepository balanceRepository;
-	@Autowired
-	private ProspectRepository prospectRepository;
-	@Autowired
-	private UserJpa userJpa;
+	private final OperationRepository operationRepository;
+	private final OperationMapper operationMapper;
+	private final ArticleRepository articleRepository;
+	private final ArticleMapper articleMapper;
+	private final AccountBankRepository accountBankRepository;
+	private final BalanceRepository balanceRepository;
+	private final ProspectRepository prospectRepository;
+	private final UserJpa userJpa;
+
+	public OperationServiceImpl(OperationRepository operationRepository,
+								ArticleRepository articleRepository,
+								AccountBankRepository accountBankRepository, BalanceRepository balanceRepository, ProspectRepository prospectRepository,
+								UserJpa userJpa) {
+		this.operationRepository = operationRepository;
+		this.operationMapper = OperationMapper.INSTANCE;
+		this.articleRepository = articleRepository;
+		this.accountBankRepository = accountBankRepository;
+		this.balanceRepository = balanceRepository;
+		this.prospectRepository = prospectRepository;
+		this.userJpa = userJpa;
+		this.articleMapper = ArticleMapper.INSTANCE;
+	}
 
 
 	@Override
@@ -50,6 +57,12 @@ public class OperationServiceImpl implements OperationService {
 
 		var dto = operationMapper.modelToDto(operation);
 		dto.setAmountTemp(dto.getAmount());
+		setArticles(operation, dto);
+
+		return dto;
+	}
+
+	private void setArticles(OperationEntity operation, OperationDto dto) {
 		for (ArticleOperation ao : operation.getArticles()) {
 
 			var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
@@ -59,8 +72,6 @@ public class OperationServiceImpl implements OperationService {
 			artDto.setPriceArtDel(ao.getPrice());
 			dto.getArticles().add(artDto);
 		}
-
-		return dto;
 	}
 
 	@Override
@@ -72,7 +83,6 @@ public class OperationServiceImpl implements OperationService {
 		for (ArticleDto art : dto.getArticles()) {
 			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
-
 				ArticleOperation ao = new ArticleOperation();
 				ao.setArticle(articleOptional.get());
 				ao.setOperation(operation);
@@ -160,40 +170,22 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public List<OperationDto> getAllInStockHistory() {
 		var operations = operationRepository.findAllByType(TypeOperation.ADD);
-		List<OperationDto> dtos = new ArrayList<>();
-		for (var op : operations) {
-			OperationDto dto = operationMapper.modelToDto(op);
-			dto.setAmountTemp(dto.getAmount());
-			for (ArticleOperation ao : op.getArticles()) {
-				var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
-				var artDto = articleMapper.modelToDto(art);
-				artDto.setQuantityTemp(ao.getQuantity());
-				artDto.setQuantityArtDel(ao.getQuantity());
-				artDto.setPriceArtDel(ao.getPrice());
-				dto.getArticles().add(artDto);
-			}
-			dtos.add(dto);
-
-		}
-		dtos.sort(Comparator.comparing(OperationDto::getCreatedAt).reversed());
-		return dtos;
+		return getOperationDtos(operations);
 	}
 
 	@Override
 	public List<OperationDto> getAllOutStockHistory() {
 		var operations = operationRepository.findAllByType(TypeOperation.OUT);
+		return getOperationDtos(operations);
+	}
+
+	@NotNull
+	private List<OperationDto> getOperationDtos(List<OperationEntity> operations) {
 		List<OperationDto> dtos = new ArrayList<>();
 		for (var op : operations) {
 			OperationDto dto = operationMapper.modelToDto(op);
 			dto.setAmountTemp(dto.getAmount());
-			for (ArticleOperation ao : op.getArticles()) {
-				var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
-				var artDto = articleMapper.modelToDto(art);
-				artDto.setQuantityTemp(ao.getQuantity());
-				artDto.setQuantityArtDel(ao.getQuantity());
-				artDto.setPriceArtDel(ao.getPrice());
-				dto.getArticles().add(artDto);
-			}
+			setArticles(op, dto);
 			dtos.add(dto);
 		}
 		dtos.sort(Comparator.comparing(OperationDto::getCreatedAt).reversed());

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ArticleMapper {
-
 	ArticleMapper INSTANCE = Mappers.getMapper(ArticleMapper.class);
 	@Mapping(target = "categoryId", source = "source.category.id")
 	@Mapping(target = "categoryLabel", source = "source.category.label")

@@ -5,11 +5,9 @@ import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.interactor.ArticleInteractor;
 import com.fatechnologies.service.ArticleService;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +17,16 @@ import java.util.List;
 @Getter
 @Setter
 @RestController
-@NoArgsConstructor
 @RequestMapping("shop/article")
 public class ArticleController {
 	private Logger log = LoggerFactory.getLogger(ArticleController.class);
+	private final ArticleService articleService;
+	private final ArticleInteractor articleInteractor;
 
-	@Autowired
-	private ArticleService articleService;
-	@Autowired
-	private ArticleInteractor articleInteractor;
+	public ArticleController(ArticleService articleService, ArticleInteractor articleInteractor) {
+		this.articleService = articleService;
+		this.articleInteractor = articleInteractor;
+	}
 
 	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ArticleDto> findById(@PathVariable("id") int id) {

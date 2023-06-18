@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface FileService {
 
 	FileDto getById(UUID id);
-	FileDto          saveImage(FileDto file, String articleReference);
-	String          loadImage(String filename,String type, String url);
+	FileDto  saveImage(FileDto file, String articleReference);
+	String   loadImage(String filename,String type, String url);
 	void delete(UUID id, String url, String filename) throws IOException;
 }

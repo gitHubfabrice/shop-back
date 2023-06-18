@@ -4,12 +4,15 @@ import com.fatechnologies.domaine.dto.OperationDto;
 import com.fatechnologies.domaine.entity.OperationEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 
 @Mapper(componentModel = "spring")
 public interface OperationMapper {
+
+	OperationMapper INSTANCE = Mappers.getMapper(OperationMapper.class);
 
 	@Mapping(target = "clientId", source = "client.id")
 	@Mapping(target = "clientLastname",  source = "client.lastname")
