@@ -9,6 +9,7 @@ public interface AccountBankService {
 	 
 	AccountBankDto getById(UUID id);
 	AccountBankDto getByReference(String reference);
+	void debitBankAccount(UUID operationId);
 	void save(AccountBankDto compte);
 	void delete(UUID id);
 	List<AccountBankDto> getAll();

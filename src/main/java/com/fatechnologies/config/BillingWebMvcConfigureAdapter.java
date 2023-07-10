@@ -8,6 +8,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.zalando.problem.jackson.ProblemModule;
 
@@ -16,11 +17,12 @@ import java.util.List;
 /**
  * <p>Adaptateur de l'interface de configuration {@link WebMvcConfigurer}.</p>
  *
- * @author Christian Amani 2022-02-04
+ * @author Assagou fabrice 2022-02-04
  */
 @Configuration
 @EnableAsync
 @EnableScheduling
+@EnableWebMvc
 public class BillingWebMvcConfigureAdapter implements WebMvcConfigurer {
 
 

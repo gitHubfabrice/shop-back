@@ -28,6 +28,8 @@ public class ArticleDto {
 	private double price;
 	private int categoryId;
 	private String categoryLabel;
+	private int qtyOut;
+	private int qtyIn;
 
 	private final Set<FileDto> files;
 

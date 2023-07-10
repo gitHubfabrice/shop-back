@@ -1,6 +1,6 @@
 package com.fatechnologies.security.payload.response;
 
-import com.fatechnologies.security.domain.entity.Profil;
+import com.fatechnologies.security.domain.entity.Profile;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
-    private Profil profil;
+    private Profile profile;
 	private String lastname;
 	private String firstname;
     private String username;

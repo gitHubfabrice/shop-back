@@ -3,7 +3,7 @@ package com.fatechnologies.security.controller;
 import com.fatechnologies.security.command.CreateUserCommand;
 import com.fatechnologies.security.command.ModifyUserCommand;
 import com.fatechnologies.security.domain.dto.UserDto;
-import com.fatechnologies.security.interactor.UserInteractor;
+import com.fatechnologies.security.interactor.UserInteract;
 import com.fatechnologies.security.port.UserPort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +20,22 @@ import java.util.UUID;
 @RequestMapping("/shop/user")
 public class UserController {
 
-	private final UserInteractor userInteractor;
+	private final UserInteract userInteract;
 	private final UserPort userPort;
 
-	public UserController(UserInteractor userInteractor, UserPort userPort) {
-		this.userInteractor = userInteractor;
+	public UserController(UserInteract userInteract, UserPort userPort) {
+		this.userInteract = userInteract;
         this.userPort = userPort;
 	}
 
 	@PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void newAccount( @RequestBody CreateUserCommand command) {
-		userInteractor.createAccount(command);
+		userInteract.createAccount(command);
 	}
 
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateAccount( @RequestBody ModifyUserCommand command) {
-        userInteractor.updateAccount(command);
+        userInteract.updateAccount(command);
     }
 
     @DeleteMapping(value = "/delete/{id}")
@@ -45,12 +45,12 @@ public class UserController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void newUser( @RequestBody CreateUserCommand command) {
-        userInteractor.CreateUser(command);
+        userInteract.CreateUser(command);
     }
 
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateUser( @RequestBody CreateUserCommand command) {
-        userInteractor.CreateUser(command);
+        userInteract.CreateUser(command);
     }
 
     @PutMapping(value = "/update-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

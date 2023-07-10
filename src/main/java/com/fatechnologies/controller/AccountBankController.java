@@ -51,6 +51,11 @@ public class AccountBankController {
 		 accountBankService.save(compte);
 	}
 
+	@PutMapping(value = "/debit/{operationId}")
+	public void debit(@PathVariable("operationId") UUID operationId) {
+		accountBankService.debitBankAccount(operationId);
+	}
+
 	@GetMapping(value = "/get-all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<AccountBankDto>> getAll() {
 		var accountBanks = accountBankService.getAll();

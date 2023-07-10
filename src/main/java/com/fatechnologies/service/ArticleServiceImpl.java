@@ -2,6 +2,7 @@ package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
 import com.fatechnologies.domaine.dto.FileDto;
+import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.ArticleEntity;
 import com.fatechnologies.domaine.entity.FileEntity;
 import com.fatechnologies.domaine.entity.StockValue;
@@ -13,13 +14,11 @@ import com.fatechnologies.repository.StockValueRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.scheduling.annotation.Scheduled;
+import com.fatechnologies.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -32,13 +31,17 @@ public class ArticleServiceImpl implements ArticleService {
 	private final FileRepository fileRepository;
 	private final FileService fileService;
 	private final FileMapper fileMapper;
-
+	private final  OperationRepository operationRepository;
 	private final StockValueRepository stockValueRepository;
 
-	public ArticleServiceImpl(ArticleRepository articleRepository, FileRepository fileRepository, FileService fileService, StockValueRepository stockValueRepository) {
+	public ArticleServiceImpl(ArticleRepository articleRepository,
+							  FileRepository fileRepository,
+							  FileService fileService,
+							  OperationRepository operationRepository, StockValueRepository stockValueRepository) {
 		this.articleRepository = articleRepository;
 		this.fileRepository = fileRepository;
 		this.fileService = fileService;
+		this.operationRepository = operationRepository;
 		this.fileMapper = FileMapper.INSTANCE;
 		this.articleMapper = ArticleMapper.INSTANCE;
 		this.stockValueRepository = stockValueRepository;
@@ -78,6 +81,13 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleEntity> articleEntities = articleRepository.findAll();
 		List<ArticleDto> dtos = new ArrayList<>();
 		for (var article : articleEntities) {
+
+			var qtyIn = operationRepository.sommeQuantity(article.getId(), TypeOperation.ADD);
+			article.setQtyIn(qtyIn == null ? 0 : qtyIn);
+			var qtyOut = operationRepository.sommeQuantity(article.getId(), TypeOperation.OUT);
+			article.setQtyOut(qtyOut == null ? 0 : qtyOut);
+
+			articleRepository.saveAndFlush(article);
 			ArticleDto dto = articleMapper.modelToDto(article);
 			dtos.add(dto);
 		}
@@ -95,6 +105,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		return amount;
 	}
+
 	@Override
 	public int idGen(){
 		var nbre = articleRepository.nbre();
@@ -102,7 +113,6 @@ public class ArticleServiceImpl implements ArticleService {
 			return 1;
 		else return articleRepository.max() + 1;
 	}
-
 	@Scheduled(cron = "0 0 0 1/7 * *")
 	public void historicalStockValue(){
 		List<ArticleEntity> articleEntities = articleRepository.findAll();
@@ -115,4 +125,17 @@ public class ArticleServiceImpl implements ArticleService {
 
 	}
 
+	@Override
+	public void updateInventory(String action, Integer articleId, int quantityTemp, int quantity) {
+		var article = articleRepository.findById(articleId).orElseThrow();
+		if (Objects.equals(action, "out")){
+			article.more(quantityTemp);
+			article.less(quantity);
+        }else if (Objects.equals(action, "enter")){
+			article.less(quantityTemp);
+			article.more(quantity);
+		}
+		articleRepository.saveAndFlush(article);
+
+	}
 }

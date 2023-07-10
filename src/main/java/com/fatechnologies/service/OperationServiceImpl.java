@@ -9,11 +9,9 @@ import com.fatechnologies.domaine.entity.OperationEntity;
 import com.fatechnologies.domaine.mapper.ArticleMapper;
 import com.fatechnologies.domaine.mapper.OperationMapper;
 import com.fatechnologies.repository.*;
-import com.fatechnologies.security.adapter.repository.jpa.UserJpa;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
-import lombok.Getter;
-import lombok.Setter;
+import com.fatechnologies.security.utils.Constants;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +20,10 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Getter
-@Setter
 @Service
 @Transactional
 public class OperationServiceImpl implements OperationService {
+
 	private final OperationRepository operationRepository;
 	private final OperationMapper operationMapper;
 	private final ArticleRepository articleRepository;
@@ -34,20 +31,19 @@ public class OperationServiceImpl implements OperationService {
 	private final AccountBankRepository accountBankRepository;
 	private final BalanceRepository balanceRepository;
 	private final ProspectRepository prospectRepository;
-	private final UserJpa userJpa;
 
 	public OperationServiceImpl(OperationRepository operationRepository,
 								ArticleRepository articleRepository,
-								AccountBankRepository accountBankRepository, BalanceRepository balanceRepository, ProspectRepository prospectRepository,
-								UserJpa userJpa) {
+								AccountBankRepository accountBankRepository,
+								BalanceRepository balanceRepository,
+								ProspectRepository prospectRepository) {
 		this.operationRepository = operationRepository;
 		this.operationMapper = OperationMapper.INSTANCE;
 		this.articleRepository = articleRepository;
+		this.articleMapper = ArticleMapper.INSTANCE;
 		this.accountBankRepository = accountBankRepository;
 		this.balanceRepository = balanceRepository;
 		this.prospectRepository = prospectRepository;
-		this.userJpa = userJpa;
-		this.articleMapper = ArticleMapper.INSTANCE;
 	}
 
 
@@ -57,12 +53,12 @@ public class OperationServiceImpl implements OperationService {
 
 		var dto = operationMapper.modelToDto(operation);
 		dto.setAmountTemp(dto.getAmount());
-		setArticles(operation, dto);
+		getAllArticle(operation, dto);
 
 		return dto;
 	}
 
-	private void setArticles(OperationEntity operation, OperationDto dto) {
+	private void getAllArticle(OperationEntity operation, OperationDto dto) {
 		for (ArticleOperation ao : operation.getArticles()) {
 
 			var art = articleRepository.findById(ao.getArticle().getId()).orElseThrow(BasicException::new);
@@ -79,12 +75,14 @@ public class OperationServiceImpl implements OperationService {
 		double amount = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  String.valueOf(idGen()));
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  idGen());
 		for (ArticleDto art : dto.getArticles()) {
 			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
+				var article = articleOptional.get();
+
 				ArticleOperation ao = new ArticleOperation();
-				ao.setArticle(articleOptional.get());
+				ao.setArticle(article);
 				ao.setOperation(operation);
 				ao.setType(operation.getType());
 				ao.setQuantity(art.getQuantityArtDel());
@@ -92,17 +90,27 @@ public class OperationServiceImpl implements OperationService {
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
 
 				//mise à jour du stock
-				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
-				articleOptional.get().less(art.getQuantityTemp());
-				articleOptional.get().more(art.getQuantityArtDel());
+				article.setQuantityOld(article.getQuantity());
+				article.less(art.getQuantityTemp());
+				article.more(art.getQuantityArtDel());
 
-				articleRepository.saveAndFlush(articleOptional.get());
+				articleRepository.saveAndFlush(article);
 				artLiv.add(ao);
 			}
 		}
 
+		/*start to debit account*/
+		if (operation.isDebtor()){
+			var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+            accountBank.deposit(dto.getAmountTemp());
+            accountBank.withdrawal(amount);
+            accountBankRepository.saveAndFlush(accountBank);
+		}
+		/*end to debit account*/
+
 		operation.getArticles().clear();
 		operation.getArticles().addAll(artLiv);
+
 		operation.setAmount(amount);
 		operation.setCreatedAt(LocalDateTime.now());
 
@@ -118,7 +126,7 @@ public class OperationServiceImpl implements OperationService {
 		operation.setClient(client);
 		var clientBalance = balanceRepository.findById(client.getBalance().getId()).orElseThrow(BasicException::new);
 		var userBalance   = balanceRepository.findOneBalanceByUserId(dto.getUserId()).orElseThrow(BasicException::new);
-		operation.setReference(operation.getReference() != null ? operation.getReference() :  String.valueOf(idGen()));
+		operation.setReference(operation.getReference() != null ? operation.getReference() :  idGen());
 
 		for (ArticleDto art : dto.getArticles()) {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
@@ -157,6 +165,7 @@ public class OperationServiceImpl implements OperationService {
 		userBalance.withdrawal(dto.getAmountTemp());
 		userBalance.deposit(amount);
 		operation.setCreatedAt(LocalDateTime.now());
+		operation.setDebtor(true);
 		balanceRepository.saveAndFlush(userBalance);
 		balanceRepository.saveAndFlush(clientBalance);
 		operationRepository.saveAndFlush(operation);
@@ -185,22 +194,22 @@ public class OperationServiceImpl implements OperationService {
 		for (var op : operations) {
 			OperationDto dto = operationMapper.modelToDto(op);
 			dto.setAmountTemp(dto.getAmount());
-			setArticles(op, dto);
+			getAllArticle(op, dto);
 			dtos.add(dto);
+
 		}
 		dtos.sort(Comparator.comparing(OperationDto::getCreatedAt).reversed());
 		return dtos;
 	}
 
-	public int idGen(){
-		var nbre = operationRepository.nbre();
-		if (nbre == 0)
+	private int idGen(){
+		if (operationRepository.nbre() == 0)
 			return 1;
 		else return operationRepository.max() + 1;
 	}
 	@Scheduled(cron="0 0 0 * * *")
-	public void closeOperation(){
-		var operations = operationRepository.findAllByStatus(false);
+	protected void closeOperation(){
+		var operations = operationRepository.findAllByStatusAndDebtor(false, true);
 		operations.forEach(operation -> {
 			operation.setStatus(true);
 			operationRepository.save(operation);

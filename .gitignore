@@ -39,3 +39,4 @@ build/
 .DS_STORE
 **/*/.DS_STORE
 uploads/
+/m2/

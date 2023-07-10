@@ -11,13 +11,9 @@ import com.fatechnologies.service.FileService;
 import java.time.LocalDateTime;
 
 public class CreateArticle implements UseCase<ArticleCommand> {
-
     private final ArticleService articleService;
-
     private final FileService fileService;
-
     private final ArticleMapper articleMapper;
-
 
     public CreateArticle(ArticleService articleService, FileService fileService) {
         this.articleService = articleService;

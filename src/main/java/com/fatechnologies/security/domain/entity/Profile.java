@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Profil implements Serializable {
+public abstract class Profile implements Serializable {
 
   private String lastname;
   private String firstname;
@@ -25,14 +25,13 @@ public abstract class Profil implements Serializable {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Profil)) {
+    if (!(o instanceof Profile profile)) {
       return false;
     }
-    Profil profil = (Profil) o;
-    return Objects.equals(lastname, profil.lastname) &&
-        Objects.equals(firstname, profil.firstname) &&
-        Objects.equals(function, profil.function) &&
-        Objects.equals(birthday, profil.birthday) ;
+      return Objects.equals(lastname, profile.lastname) &&
+        Objects.equals(firstname, profile.firstname) &&
+        Objects.equals(function, profile.function) &&
+        Objects.equals(birthday, profile.birthday) ;
   }
 
   @Override

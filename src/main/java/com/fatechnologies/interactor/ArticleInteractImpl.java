@@ -10,13 +10,13 @@ import com.fatechnologies.usecase.UpdateArticle;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticleInteractorImpl implements  ArticleInteractor{
+public class ArticleInteractImpl implements ArticleInteract {
     private final UseCase<ArticleCommand> create;
     private final UseCase<ArticleCommand> update;
 
-    public ArticleInteractorImpl(ArticleService articleService, FileService fileService) {
-        this.create = new CreateArticle(articleService, fileService);
-        this.update = new UpdateArticle(articleService, fileService);
+    public ArticleInteractImpl(ArticleService articleService, FileService fileService) {
+        create = new CreateArticle(articleService, fileService);
+        update = new UpdateArticle(articleService, fileService);
     }
 
     @Override
@@ -28,4 +28,6 @@ public class ArticleInteractorImpl implements  ArticleInteractor{
     public void update(ArticleCommand command) {
         new UseCaseExecutor<ArticleCommand>().execute(update, command);
     }
+
+
 }

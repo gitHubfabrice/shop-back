@@ -21,24 +21,26 @@ import java.util.UUID;
 @Table(name = "shop_operation")
 public class OperationEntity {
 
-	@Id
-	@GeneratedValue
-	@UuidGenerator
-	private UUID id;
-	private String reference;
-	private LocalDate date;
-	private LocalDateTime createdAt;
-	private TypeOperation type;
-	private double amount;
-	@Column(columnDefinition = "boolean default false")
-	private boolean status;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private ProspectEntity client;
+  @Id
+  @GeneratedValue
+  @UuidGenerator
+  private UUID id;
+  private Integer reference;
+  private LocalDate date;
+  private LocalDateTime createdAt;
+  private TypeOperation type;
+  private double amount;
+  @Column(name = "status",columnDefinition = "boolean default false")
+  private boolean status;
+  @Column(name = "debtor",columnDefinition = "boolean default false")
+  private boolean debtor;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private ProspectEntity client;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	private UserEntity user;
+  @ManyToOne(fetch = FetchType.EAGER)
+  private UserEntity user;
 
-	@OneToMany(mappedBy = "pk.operation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private List<ArticleOperation> articles =new ArrayList<>();
+  @OneToMany(mappedBy = "pk.operation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  private List<ArticleOperation> articles = new ArrayList<>();
 
 }

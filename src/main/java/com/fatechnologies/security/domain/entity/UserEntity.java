@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Setter
 @Entity
 @Table(name = "shop_secure_user")
-public class UserEntity extends Profil implements Serializable {
+public class UserEntity extends Profile implements Serializable {
 
   @Id
   private UUID id;
