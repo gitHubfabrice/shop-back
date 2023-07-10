@@ -37,12 +37,17 @@ public class TransactionServiceImpl implements TransactionService {
   private final UserJpa userJpa;
   private final HistoryBalanceRepository historyBalanceRepository;
 
-  public TransactionServiceImpl(TransactionRepository transactionRepository, AccountBankRepository accountBankRepository, BalanceRepository balanceRepository, OperationRepository operationRepository, TransactionMapper transactionMapper, UserJpa userJpa, HistoryBalanceRepository historyBalanceRepository) {
+  public TransactionServiceImpl(TransactionRepository transactionRepository,
+                                AccountBankRepository accountBankRepository,
+                                BalanceRepository balanceRepository,
+                                OperationRepository operationRepository,
+                                UserJpa userJpa,
+                                HistoryBalanceRepository historyBalanceRepository) {
     this.transactionRepository = transactionRepository;
     this.accountBankRepository = accountBankRepository;
     this.balanceRepository = balanceRepository;
     this.operationRepository = operationRepository;
-    this.transactionMapper = transactionMapper;
+    this.transactionMapper = TransactionMapper.INSTANCE;
     this.userJpa = userJpa;
     this.historyBalanceRepository = historyBalanceRepository;
   }

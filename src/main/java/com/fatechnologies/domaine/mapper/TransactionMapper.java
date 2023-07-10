@@ -4,12 +4,15 @@ import com.fatechnologies.domaine.dto.TransactionDto;
 import com.fatechnologies.domaine.entity.TransactionEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
+
+	TransactionMapper INSTANCE = Mappers.getMapper(TransactionMapper.class);
 	@Mapping(target ="userId", source = "user.id")
 	@Mapping(target ="userLastname", source = "user.lastname")
 	@Mapping(target ="userFirstname", source = "user.firstname")

@@ -32,9 +32,11 @@ public class AccountBankServiceImpl implements AccountBankService {
 	private final OperationRepository operationRepository;
 	private final HistoryBalanceRepository historyBalanceRepository;
 
-	public AccountBankServiceImpl(AccountBankRepository accountBankRepository, AccountBankMapper accountBankMapper, OperationRepository operationRepository, HistoryBalanceRepository historyBalanceRepository) {
+	public AccountBankServiceImpl(AccountBankRepository accountBankRepository,
+								  OperationRepository operationRepository,
+								  HistoryBalanceRepository historyBalanceRepository) {
 		this.accountBankRepository = accountBankRepository;
-		this.accountBankMapper = accountBankMapper;
+		this.accountBankMapper = AccountBankMapper.INSTANCE;
 		this.operationRepository = operationRepository;
 		this.historyBalanceRepository = historyBalanceRepository;
 	}
