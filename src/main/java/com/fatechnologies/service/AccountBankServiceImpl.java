@@ -1,9 +1,12 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.AccountBankDto;
+import com.fatechnologies.domaine.dto.TypeTransaction;
 import com.fatechnologies.domaine.entity.AccountBankEntity;
+import com.fatechnologies.domaine.entity.HistoryBalance;
 import com.fatechnologies.domaine.mapper.AccountBankMapper;
 import com.fatechnologies.repository.AccountBankRepository;
+import com.fatechnologies.repository.HistoryBalanceRepository;
 import com.fatechnologies.repository.OperationRepository;
 import com.fatechnologies.security.exception.BasicException;
 import com.fatechnologies.security.exception.Exception;
@@ -27,11 +30,13 @@ public class AccountBankServiceImpl implements AccountBankService {
 
 	private final AccountBankMapper accountBankMapper;
 	private final OperationRepository operationRepository;
+	private final HistoryBalanceRepository historyBalanceRepository;
 
-	public AccountBankServiceImpl(AccountBankRepository accountBankRepository, AccountBankMapper accountBankMapper, OperationRepository operationRepository) {
+	public AccountBankServiceImpl(AccountBankRepository accountBankRepository, AccountBankMapper accountBankMapper, OperationRepository operationRepository, HistoryBalanceRepository historyBalanceRepository) {
 		this.accountBankRepository = accountBankRepository;
 		this.accountBankMapper = accountBankMapper;
 		this.operationRepository = operationRepository;
+		this.historyBalanceRepository = historyBalanceRepository;
 	}
 
 	@Override
@@ -61,6 +66,7 @@ public class AccountBankServiceImpl implements AccountBankService {
 			op.setDebtor(true);
 			operationRepository.saveAndFlush(op);
 			accountBankRepository.saveAndFlush(accountBank);
+			historyBalanceRepository.save(new HistoryBalance(accountBank.getAmount(), op.getAmount(), TypeTransaction.DEBIT));
 		});
 	}
 

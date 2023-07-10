@@ -227,6 +227,7 @@ public class TransactionServiceImpl implements TransactionService {
     accountBank.deposit(transaction.getAmount());
     transaction.setStatus(true);
     accountBankRepository.saveAndFlush(accountBank);
+    historyBalanceRepository.save(new HistoryBalance(accountBank.getAmount(), transaction.getAmount(), TypeTransaction.CREDIT));
     transactionRepository.saveAndFlush(transaction);
   }
 
