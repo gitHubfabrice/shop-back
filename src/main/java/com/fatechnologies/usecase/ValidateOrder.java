@@ -38,7 +38,7 @@ public class ValidateOrder implements UseCase<ValidateOrderCommand> {
     order.setStatus(true);
     order.setValidatedAt(now);
     var account = accountBankRepository
-            .findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL)
+            .findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL)
             .orElseThrow();
 
     account.deposit(order.getAmount());

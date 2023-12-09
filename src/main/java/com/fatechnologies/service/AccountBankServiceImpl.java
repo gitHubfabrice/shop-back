@@ -61,7 +61,7 @@ public class AccountBankServiceImpl implements AccountBankService {
 				return;
 			}
 			var accountBank = accountBankRepository
-							.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL)
+							.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL)
 							.orElseThrow(() -> new Exception("Veuillez contacter l'administrateur"));
 			accountBank.withdrawal(op.getAmount());
 			op.setStatus(true);

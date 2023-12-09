@@ -106,7 +106,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void withdrawal(TransactionDto dto) {
-    var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+    var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL).orElseThrow(BasicException::new);
 
     accountBank.deposit(dto.getAmountTemp());
     //deposit the amount
@@ -126,8 +126,8 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void saveMoney(TransactionDto dto) {
-    var accountBankPrincipal = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-    var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_SAVE_MONEY).orElseThrow(BasicException::new);
+    var accountBankPrincipal = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL).orElseThrow(BasicException::new);
+    var accountBankSaveMoney = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_SAVE_MONEY).orElseThrow(BasicException::new);
 
     //deposit the amount
     accountBankPrincipal.deposit(dto.getAmountTemp());
@@ -228,7 +228,7 @@ public class TransactionServiceImpl implements TransactionService {
     if (transaction.isStatus()){
       return;
     }
-    var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
+    var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL).orElseThrow(BasicException::new);
     accountBank.deposit(transaction.getAmount());
     transaction.setStatus(true);
     accountBankRepository.saveAndFlush(accountBank);

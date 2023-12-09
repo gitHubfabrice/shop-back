@@ -73,9 +73,33 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public void inStock(OperationDto dto) {
 		double amount = 0;
+		double benefice = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
 		operation.setReference(operation.getReference() != null ? operation.getReference() :  idGen());
+		amount = getAmount(dto, operation, amount, artLiv);
+
+		debitAccount(dto, operation, amount);
+
+		operation.getArticles().clear();
+		operation.getArticles().addAll(artLiv);
+
+		operation.setAmount(amount);
+		operation.setCreatedAt(LocalDateTime.now());
+
+		operationRepository.saveAndFlush(operation);
+	}
+
+	private void debitAccount(OperationDto dto, OperationEntity operation, double amount) {
+		if (operation.isDebtor()){
+			var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL).orElseThrow(BasicException::new);
+            accountBank.deposit(dto.getAmountTemp());
+            accountBank.withdrawal(amount);
+            accountBankRepository.saveAndFlush(accountBank);
+		}
+	}
+
+	private double getAmount(OperationDto dto, OperationEntity operation, double amount, List<ArticleOperation> artLiv) {
 		for (ArticleDto art : dto.getArticles()) {
 			var articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
@@ -98,28 +122,13 @@ public class OperationServiceImpl implements OperationService {
 				artLiv.add(ao);
 			}
 		}
-
-		/*start to debit account*/
-		if (operation.isDebtor()){
-			var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.COMPTE_PRINCIPAL).orElseThrow(BasicException::new);
-            accountBank.deposit(dto.getAmountTemp());
-            accountBank.withdrawal(amount);
-            accountBankRepository.saveAndFlush(accountBank);
-		}
-		/*end to debit account*/
-
-		operation.getArticles().clear();
-		operation.getArticles().addAll(artLiv);
-
-		operation.setAmount(amount);
-		operation.setCreatedAt(LocalDateTime.now());
-
-		operationRepository.saveAndFlush(operation);
+		return amount;
 	}
 
 	@Override
 	public void outStock(OperationDto dto) {
 		double amount = 0;
+		double benefice = 0;
 		List<ArticleOperation> artLiv = new ArrayList<>();
 		var operation = operationMapper.dtoToModel(dto);
 		var client = prospectRepository.findById(dto.getClientId()).orElseThrow(BasicException::new);
@@ -132,7 +141,6 @@ public class OperationServiceImpl implements OperationService {
 			Optional<ArticleEntity> articleOptional = this.articleRepository.findById(art.getId());
 			if(articleOptional.isPresent()){
 
-				//vérifions si l'article est disponible en stock
 				if (articleOptional.get().getQuantity() + art.getQuantityTemp() < art.getQuantityArtDel()) {
 					throw new Exception("Vérifiez votre stock de marchandise");
 				}
@@ -144,6 +152,7 @@ public class OperationServiceImpl implements OperationService {
 				ao.setQuantity(art.getQuantityArtDel());
 				ao.setPrice(art.getPriceArtDel());
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
+				benefice +=  art.getQuantityArtDel() * (art.getPriceArtDel() - art.getPrice());
 
 				//mise à jour du stock
 				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
@@ -159,9 +168,10 @@ public class OperationServiceImpl implements OperationService {
 		operation.getArticles().addAll(artLiv);
 		operation.setAmount(amount);
 
-		//mise à jour de la caisse
+		//mise à jour du compte client
 		clientBalance.withdrawal(dto.getAmountTemp());
 		clientBalance.deposit(amount);
+		//mise à jour du compte opérateur
 		userBalance.withdrawal(dto.getAmountTemp());
 		userBalance.deposit(amount);
 		operation.setCreatedAt(LocalDateTime.now());
