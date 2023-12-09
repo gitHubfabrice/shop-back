@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         var authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         authenticationProvider.setUserDetailsService(accountDetailsService);
@@ -66,21 +66,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web ->
-                web
-                    .ignoring()
-                    .antMatchers(HttpMethod.OPTIONS, "/**")
-                    .antMatchers(AUTH_WHITELIST);
-
-}
-
+        return web -> web.ignoring()
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers(AUTH_WHITELIST);
+    }
 
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -106,11 +101,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic()
                 .and()
-                .apply(securityConfigurer)
-        ;
+                .apply(securityConfigurer);
 
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

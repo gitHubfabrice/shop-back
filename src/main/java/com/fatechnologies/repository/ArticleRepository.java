@@ -14,4 +14,8 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
 
     @Query(value="SELECT count(id) FROM ArticleEntity")
     int nbre();
+
+    @Query(value = "SELECT COALESCE(SUM(quantity * price), 0) AS balanceInventory FROM ArticleEntity")
+    double balanceInventory();
+
 }

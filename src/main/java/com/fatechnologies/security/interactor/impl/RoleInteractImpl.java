@@ -16,9 +16,6 @@ public class RoleInteractImpl implements RoleInteract {
 	private final UseCase<CreateRoleCommand> createRole;
 	private final UseCase<ModifyRoleCommand> modifyRole;
 
-
-
-
 	public RoleInteractImpl(final RolePort rolePort) {
 		createRole = new CreateRole(rolePort);
 		modifyRole = new ModifyRole(rolePort);

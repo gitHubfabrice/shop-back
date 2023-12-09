@@ -27,6 +27,5 @@ public interface TransactionService {
 	List<TransactionDto> getAllCredit(boolean direct);
 	List<TransactionDto> getAllByLabel(String label);
 	void checkingTransaction(UUID id);
-
 	ChartOption getOptions();
 }

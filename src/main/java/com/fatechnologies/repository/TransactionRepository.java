@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, UUID>{
+
     List<TransactionEntity> findAllByStatus(boolean status);
     @Query("Select t From TransactionEntity t Where t.nature = com.fatechnologies.domaine.dto.TypeTransaction.DEBIT")
     List<TransactionEntity> findAllDebit();
@@ -20,9 +21,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     List<TransactionEntity> findAllByUserIdAndLabelIgnoreCase(UUID id, String label);
     List<TransactionEntity> findAllByLabelIgnoreCase(String label);
 
+
     @Query(value="SELECT max(reference) FROM TransactionEntity")
     int max();
-
     @Query(value="SELECT count(reference) FROM TransactionEntity")
     int nbre();
 }

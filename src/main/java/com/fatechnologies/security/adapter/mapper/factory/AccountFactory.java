@@ -6,7 +6,6 @@ import com.fatechnologies.security.domain.entity.UserEntity;
 
 public class AccountFactory  implements Factory<UserEntity, UserDto> {
 
-
     @Override
     public UserDto factory(UserEntity source) {
         return new UserDto(source.getId());

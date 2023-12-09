@@ -98,12 +98,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public double getStockValue() {
-		List<ArticleEntity> articleEntities = articleRepository.findAll();
-		var amount = 0;
-		for (var article : articleEntities) {
-			amount += article.getQuantity() * article.getPrice();
-		}
-		return amount;
+		return articleRepository.balanceInventory();
 	}
 
 	@Override
@@ -118,7 +113,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleEntity> articleEntities = articleRepository.findAll();
 		var amount = 0;
 		for (var article : articleEntities) {
-			amount += article.getQuantity() * article.getPrice();
+			amount += (int) (article.getQuantity() * article.getPrice());
 		}
 		var stockValue = new StockValue(amount);
 		stockValueRepository.save(stockValue);
