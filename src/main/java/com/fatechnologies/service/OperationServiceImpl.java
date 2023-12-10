@@ -53,6 +53,7 @@ public class OperationServiceImpl implements OperationService {
 
 		var dto = operationMapper.modelToDto(operation);
 		dto.setAmountTemp(dto.getAmount());
+		dto.setAmountBeneficeTemp(dto.getAmountBenefice());
 		getAllArticle(operation, dto);
 
 		return dto;
