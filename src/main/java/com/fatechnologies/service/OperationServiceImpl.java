@@ -152,7 +152,7 @@ public class OperationServiceImpl implements OperationService {
 				ao.setQuantity(art.getQuantityArtDel());
 				ao.setPrice(art.getPriceArtDel());
 				amount += art.getPriceArtDel() * art.getQuantityArtDel();
-				benefice +=  art.getQuantityArtDel() * (art.getPriceArtDel() - art.getPrice());
+				benefice += art.getQuantityArtDel() * (art.getPriceArtDel() - articleOptional.map(ArticleEntity::getPrice).orElse(0.0));
 
 				//mise à jour du stock
 				articleOptional.get().setQuantityOld(articleOptional.get().getQuantity());
@@ -164,21 +164,35 @@ public class OperationServiceImpl implements OperationService {
 			}
 		}
 
+		Result result = new Result(amount, benefice);
+
 		operation.getArticles().clear();
 		operation.getArticles().addAll(artLiv);
-		operation.setAmount(amount);
+
+		operation.setAmount(result.amount());
+		operation.setAmountBenefice(result.benefice());
 
 		//mise à jour du compte client
 		clientBalance.withdrawal(dto.getAmountTemp());
-		clientBalance.deposit(amount);
+		clientBalance.deposit(result.amount());
+
 		//mise à jour du compte opérateur
 		userBalance.withdrawal(dto.getAmountTemp());
-		userBalance.deposit(amount);
+		userBalance.deposit(result.amount());
+
+		//mise à jour du profit
+		var accountBenefice = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_BENEFICE).orElseThrow(BasicException::new);
+		accountBenefice.withdrawal(dto.getAmountBeneficeTemp());
+		accountBenefice.deposit(result.benefice());
+
 		operation.setCreatedAt(LocalDateTime.now());
 		operation.setDebtor(true);
 		balanceRepository.saveAndFlush(userBalance);
 		balanceRepository.saveAndFlush(clientBalance);
 		operationRepository.saveAndFlush(operation);
+	}
+
+	private record Result(double amount, double benefice) {
 	}
 
 	@Override

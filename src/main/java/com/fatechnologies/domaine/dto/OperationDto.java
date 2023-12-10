@@ -26,6 +26,8 @@ public class OperationDto implements Serializable {
 	private boolean debtor;
 	private double amount;
 	private double amountTemp;
+	private double amountBenefice;
+	private double amountBeneficeTemp;
 	private UUID clientBalanceId;
 	private UUID userId;
 	private long clientId;

@@ -30,6 +30,8 @@ public class OperationEntity {
   private LocalDateTime createdAt;
   private TypeOperation type;
   private double amount;
+  @Column(name = "amount_benefice",columnDefinition = "default 0.0")
+  private double amountBenefice;
   @Column(name = "status",columnDefinition = "boolean default false")
   private boolean status;
   @Column(name = "debtor",columnDefinition = "boolean default false")
