@@ -184,7 +184,7 @@ public class OperationServiceImpl implements OperationService {
 		//mise à jour du profit
 		var accountBenefice = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_BENEFICE).orElseThrow(BasicException::new);
 		accountBenefice.withdrawal(dto.getAmountBeneficeTemp());
-		accountBenefice.deposit(result.benefice());
+		accountBenefice.deposit(Math.max(0, result.benefice()));
 
 		operation.setCreatedAt(LocalDateTime.now());
 		operation.setDebtor(true);
