@@ -99,7 +99,6 @@ public class AccountBankServiceImpl implements AccountBankService {
 		}
 
 		dtos.sort(Comparator.comparing(AccountBankDto::getLabel));
-
 		return dtos;
 
 	}
