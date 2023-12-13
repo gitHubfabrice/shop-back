@@ -171,7 +171,7 @@ public class OperationServiceImpl implements OperationService {
 		operation.getArticles().addAll(artLiv);
 
 		operation.setAmount(result.amount());
-		operation.setAmountBenefice(result.benefice());
+		operation.setAmountBenefice(Math.max(0, result.benefice()));
 
 		//mise à jour du compte client
 		clientBalance.withdrawal(dto.getAmountTemp());
