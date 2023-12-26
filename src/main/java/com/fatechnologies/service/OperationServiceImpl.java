@@ -203,13 +203,13 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public List<OperationDto> getAllInStockHistory() {
-        var operations = operationRepository.findAllByType(TypeOperation.ADD);
+        var operations = operationRepository.findAllByTypeOrderByCreatedAtDesc(TypeOperation.ADD);
         return getOperationDtos(operations);
     }
 
     @Override
     public List<OperationDto> getAllOutStockHistory() {
-        var operations = operationRepository.findAllByType(TypeOperation.OUT);
+        var operations = operationRepository.findAllByTypeOrderByCreatedAtDesc(TypeOperation.OUT);
         return getOperationDtos(operations);
     }
 

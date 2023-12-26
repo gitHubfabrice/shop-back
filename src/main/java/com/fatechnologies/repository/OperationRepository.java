@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface OperationRepository extends JpaRepository<OperationEntity, UUID>{
 
-	List<OperationEntity> findAllByType(TypeOperation type);
+	List<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type);
 
 	Page<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type, Pageable pageable);
 
