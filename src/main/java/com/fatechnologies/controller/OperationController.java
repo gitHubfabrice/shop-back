@@ -1,7 +1,6 @@
 package com.fatechnologies.controller;
 
 import com.fatechnologies.domaine.dto.OperationDto;
-import com.fatechnologies.domaine.entity.OperationEntity;
 import com.fatechnologies.service.OperationService;
 import lombok.Getter;
 import lombok.Setter;
