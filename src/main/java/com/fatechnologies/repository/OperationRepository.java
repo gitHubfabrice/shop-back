@@ -2,6 +2,8 @@ package com.fatechnologies.repository;
 
 import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.OperationEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,9 @@ import java.util.UUID;
 public interface OperationRepository extends JpaRepository<OperationEntity, UUID>{
 
 	List<OperationEntity> findAllByType(TypeOperation type);
+
+	Page<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type, Pageable pageable);
+
 
 	List<OperationEntity> findAllByStatusAndDebtor(boolean status, boolean debtor);
 
