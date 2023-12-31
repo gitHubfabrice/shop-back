@@ -1,6 +1,7 @@
 package com.fatechnologies.service;
 
 import com.fatechnologies.domaine.dto.ArticleDto;
+import com.fatechnologies.domaine.dto.ArticleStatus;
 import com.fatechnologies.domaine.dto.FileDto;
 import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.ArticleEntity;
@@ -73,12 +74,15 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public void delete(int id) {
+		var article = articleRepository.findById(id).orElseThrow();
+		article.setStatus(ArticleStatus.DELETE);
 		articleRepository.deleteById(id);
 	}
 
 	@Override
 	public List<ArticleDto> getAll() {
-		List<ArticleEntity> articleEntities = articleRepository.findAll();
+
+		List<ArticleEntity> articleEntities = articleRepository.findAllByStatusOrderByLabel(ArticleStatus.ENABLE);
 		List<ArticleDto> dtos = new ArrayList<>();
 		for (var article : articleEntities) {
 

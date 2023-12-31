@@ -13,6 +13,7 @@ public class ArticleDto {
 	private int id;
 	private String reference;
 	private String label;
+	private ArticleStatus status;
 	private int quantity;
 	private int quantityOld;
 	private int quantityArtDel;
