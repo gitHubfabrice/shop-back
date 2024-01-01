@@ -18,8 +18,11 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     List<TransactionEntity> findAllDebit();
     @Query("Select t From TransactionEntity t Where t.nature = com.fatechnologies.domaine.dto.TypeTransaction.CREDIT And t.direct = :direct")
     List<TransactionEntity> findAllCredit(@Param("direct") boolean direct);
-    List<TransactionEntity> findAllByUserIdAndLabelIgnoreCase(UUID id, String label);
+    @Query("SELECT t FROM TransactionEntity t WHERE YEAR(t.createdAt) = :year and t.user.id = :id and t.label = :label" )
+    List<TransactionEntity> findAllByUserIdAndLabelIgnoreCase(@Param("id") UUID id, @Param("label") String label, @Param("year") int year);
     List<TransactionEntity> findAllByLabelIgnoreCase(String label);
+    @Query("SELECT t FROM TransactionEntity t WHERE YEAR(t.createdAt) = :year")
+    List<TransactionEntity> findAllByYear(@Param("year") int year);
 
 
     @Query(value="SELECT max(reference) FROM TransactionEntity")

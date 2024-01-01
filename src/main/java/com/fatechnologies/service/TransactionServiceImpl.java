@@ -165,7 +165,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public List<TransactionDto> getAllByUserInYear(UUID id) {
-    var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION);
+    var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION, LocalDateTime.now().getYear());
     return getTransactionDtos(transactions);
   }
 
@@ -183,7 +183,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public FinanceCheckPoint getFinanceCheckPoint(UUID id) {
-    var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION);
+    var transactions = transactionRepository.findAllByUserIdAndLabelIgnoreCase(id, Constants.LABEL_TRANSACTION, LocalDateTime.now().getYear());
     var finance = new FinanceCheckPoint();
     var now = LocalDateTime.now();
     for (var transaction : transactions) {
@@ -238,7 +238,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public ChartOption getOptions() {
-    var transactions = transactionRepository.findAll();
+    var transactions = transactionRepository.findAllByYear(LocalDateTime.now().getYear());
     var charOption = new ChartOption();
     for (TransactionEntity transaction : transactions) {
       if (transaction.getNature().equals(TypeTransaction.DEBIT))
