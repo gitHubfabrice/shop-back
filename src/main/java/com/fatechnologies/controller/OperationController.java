@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -55,6 +56,13 @@ public class OperationController {
 		List<OperationDto> dtos = operationService.getAllOutStockHistory();
 		return ResponseEntity.ok().body(dtos);
 	}
+
+	@GetMapping(value = "/get-benefice", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<Object, Object>> getBenefice() {
+		var  dtos = operationService.getBenefice();
+		return ResponseEntity.ok().body(dtos);
+	}
+
 
 	/*@GetMapping(value = "/get-all-out", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<OperationDto>> getAllIn(@Param("page") int page, @Param("itemsPerPage") int itemsPerPage) {

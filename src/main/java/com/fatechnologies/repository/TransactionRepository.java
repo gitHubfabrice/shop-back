@@ -24,6 +24,11 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     @Query("SELECT t FROM TransactionEntity t WHERE YEAR(t.createdAt) = :year")
     List<TransactionEntity> findAllByYear(@Param("year") int year);
 
+    @Query("SELECT TO_CHAR(created_at, 'YYYY-MM') AS mois, COUNT(*) AS nombre_de_transaction, SUM(amount) AS montant_total " +
+            "FROM TransactionEntity WHERE YEAR(created_at) = :year " +
+            "GROUP BY TO_CHAR(created_at, 'YYYY-MM') ORDER BY mois")
+    List<TransactionEntity> getOption(@Param("year") int year);
+
 
     @Query(value="SELECT max(reference) FROM TransactionEntity")
     int max();

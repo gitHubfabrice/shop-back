@@ -209,6 +209,7 @@ public class TransactionServiceImpl implements TransactionService {
     return getTransactionDtos(transactions);
   }
 
+
   @Override
   public List<TransactionDto> getAllCredit(boolean direct) {
     var transactions = transactionRepository.findAllCredit(direct);

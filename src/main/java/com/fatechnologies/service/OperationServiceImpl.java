@@ -214,6 +214,11 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
+    public Map<Object, Object> getBenefice() {
+        return operationRepository.getBenefice();
+    }
+
+    @Override
     public Page<OperationDto> getAllOutStockHistory(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<OperationEntity> page = operationRepository.findAllByTypeOrderByCreatedAtDesc(TypeOperation.OUT, pageable);

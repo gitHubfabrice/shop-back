@@ -4,6 +4,7 @@ import com.fatechnologies.domaine.dto.OperationDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface OperationService {
@@ -13,5 +14,6 @@ public interface OperationService {
 	void delete(UUID id);
 	List<OperationDto> getAllInStockHistory();
 	List<OperationDto> getAllOutStockHistory();
+	Map<Object, Object> getBenefice();
 	Page<OperationDto> getAllOutStockHistory(int pageNumber, int pageSize);
 }
