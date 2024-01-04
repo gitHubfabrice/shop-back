@@ -2,7 +2,6 @@ package com.fatechnologies.repository;
 
 import com.fatechnologies.domaine.dto.TypeOperation;
 import com.fatechnologies.domaine.entity.OperationEntity;
-import com.fatechnologies.domaine.entity.TransactionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
