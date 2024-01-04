@@ -44,9 +44,6 @@ public interface OperationRepository extends JpaRepository<OperationEntity, UUID
            """, nativeQuery = true)
 	Map<Object, Object> getBenefice();
 
-
-
-
 	@Query(value="SELECT max(reference) FROM OperationEntity")
 	int max();
 
