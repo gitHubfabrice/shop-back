@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public record ArticleCommand(
-        int id, int categoryId, String reference, String label,
+        int id, int categoryId, String reference, String label, String status,
         LocalDateTime createdAt, int quantity, double price, boolean published,
         String description, Set<FileDto> files) implements Command {}
