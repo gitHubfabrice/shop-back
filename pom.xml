@@ -572,7 +572,7 @@
                         <id>build-jar</id>
                         <phase>install</phase>
                         <configuration>
-                            <finalName>shopping-elegance-design</finalName>
+                            <finalName>shop-back</finalName>
                         </configuration>
                         <goals>
                             <goal>repackage</goal>
