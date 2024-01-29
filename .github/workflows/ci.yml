@@ -29,8 +29,8 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn clean install
-      - uses: mr-smithers-excellent/docker-build-push@v6
-        name: Build & push Docker image
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: repo/shop-back
           tags:  latest
