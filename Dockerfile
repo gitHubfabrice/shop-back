@@ -8,6 +8,6 @@ WORKDIR /usr/src/app
 COPY target/shop-back.jar shop-back.jar
 
 # Commande pour lancer le jar Spring Boot
-CMD ["java", "-Dspring.profiles.active=dev", "-jar", "shop-back.jar"]
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "shop-back.jar"]
 
 EXPOSE 8090
