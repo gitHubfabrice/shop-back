@@ -12,12 +12,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class AuthentificationFilter extends GenericFilterBean {
+public class AuthenticationFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
 
-    public AuthentificationFilter(TokenProvider tokenProvider){
+    public AuthenticationFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
@@ -33,13 +33,13 @@ public class AuthentificationFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private String obtainedToken(HttpServletRequest http){
+    private String obtainedToken(HttpServletRequest http) {
 
-       var authorization=  http.getHeader(AUTHORIZATION_HEADER);
-       var hasText =  StringUtils.hasText(authorization);
-       var containBear = authorization.startsWith("Bearer ");
-       if(hasText && containBear){
-           return authorization.substring(7);
+        var authorization = http.getHeader(AUTHORIZATION_HEADER);
+        var hasText = StringUtils.hasText(authorization);
+        var containBear = authorization.startsWith("Bearer ");
+        if (hasText && containBear) {
+            return authorization.substring(7);
 
         }
         return null;

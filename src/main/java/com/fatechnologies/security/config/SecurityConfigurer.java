@@ -17,7 +17,7 @@ public class SecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurit
 
     @Override
   public void configure(HttpSecurity http) {
-    var authentificationFilter = new AuthentificationFilter(tokenProvider);
+    var authentificationFilter = new AuthenticationFilter(tokenProvider);
         http.addFilterBefore(authentificationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 }

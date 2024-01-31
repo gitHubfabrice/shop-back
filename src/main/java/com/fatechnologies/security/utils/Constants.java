@@ -10,7 +10,7 @@ public final class Constants {
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "en";
     public static final String ACCOUNT_PRINCIPAL = "accountPrincipal";
-    public static final String ACCOUNT_SAVE_MONEY = "saveMoney";
+    public static final String ACCOUNT_SAVE_MONEY = "accountEpargne";
     public static final String ACCOUNT_BENEFICE = "pro-001";
     public static final String LABEL_TRANSACTION = "transfer";
     private Constants() {}
