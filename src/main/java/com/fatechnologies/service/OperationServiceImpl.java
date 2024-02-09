@@ -93,7 +93,9 @@ public class OperationServiceImpl implements OperationService {
 
     private void debitAccount(OperationDto dto, OperationEntity operation, double amount) {
         if (operation.isDebtor()) {
-            var accountBank = accountBankRepository.findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL).orElseThrow(BasicException::new);
+            var accountBank = accountBankRepository
+                    .findOneByReferenceIgnoreCase(Constants.ACCOUNT_PRINCIPAL)
+                    .orElseThrow(BasicException::new);
             accountBank.deposit(dto.getAmountTemp());
             accountBank.withdrawal(amount);
             accountBankRepository.saveAndFlush(accountBank);

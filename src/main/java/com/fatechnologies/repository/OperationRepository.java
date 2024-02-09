@@ -33,13 +33,20 @@ public interface OperationRepository extends JpaRepository<OperationEntity, UUID
 
 	@Query(value = """
             SELECT
-                (SELECT SUM(amount_benefice) FROM shop_operation
-                WHERE EXTRACT(MONTH FROM created_at) = EXTRACT(MONTH FROM CURRENT_DATE)
-                AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND type = 1 AND status = true) AS solde_mois,
-                (SELECT SUM(amount_benefice) FROM shop_operation
-                WHERE EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND type = 1 AND status = true) AS solde_annee
+                 COALESCE(((SELECT SUM(amount_benefice) FROM shop_operation
+                 WHERE EXTRACT(MONTH FROM created_at) = EXTRACT(MONTH FROM CURRENT_DATE)
+                 AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+                 AND type = 1 AND status = true) - (SELECT SUM(amount) FROM shop_transaction sp
+                 WHERE EXTRACT(MONTH FROM sp.created_at) = EXTRACT(MONTH FROM CURRENT_DATE)
+                 AND EXTRACT(YEAR FROM sp.created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+                 AND nature = 1)), 0) AS solde_mois,
+                \s
+                 COALESCE(((SELECT SUM(amount_benefice) FROM shop_operation
+                 WHERE EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+                 AND type = 1 AND status = true) - (SELECT SUM(amount) FROM shop_transaction sp
+                 WHERE EXTRACT(YEAR FROM sp.created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+                 AND nature = 1) + 1000000), 0) AS solde_annee
+             
            """, nativeQuery = true)
 	Map<Object, Object> getBenefice();
 
