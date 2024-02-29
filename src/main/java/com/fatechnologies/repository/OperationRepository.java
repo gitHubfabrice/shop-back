@@ -21,7 +21,6 @@ public interface OperationRepository extends JpaRepository<OperationEntity, UUID
 
 	Page<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type, Pageable pageable);
 
-
 	List<OperationEntity> findAllByStatusAndDebtor(boolean status, boolean debtor);
 
 	List<OperationEntity> findAllByUserIdAndStatus(UUID id, boolean status);

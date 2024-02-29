@@ -25,6 +25,6 @@ public class ModifyUserIn implements UseCase<ModifyUserCommand>{
 	@Override
 	public void perform(ModifyUserCommand command) {
 		var user = userMapper.commandModToDto(command);
-		userPort.save(user);
+		userPort.updateUser(user);
 	}
 }

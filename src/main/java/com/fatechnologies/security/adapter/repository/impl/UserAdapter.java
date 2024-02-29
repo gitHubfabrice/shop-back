@@ -242,7 +242,8 @@ public class UserAdapter implements UserPort {
 
     @Override
     public UserEntity updateUser(UserDto userDTO) {
-        UserEntity userEntity = new UserEntity();
+        var userEntity = userMapper.dtoToModel(userDTO);
+
         userEntity.setId(userDTO.getId());
         userEntity.setUsername(userDTO.getUsername().toLowerCase());
 
