@@ -16,8 +16,8 @@ import java.util.UUID;
 
 @Repository
 public interface OperationRepository extends JpaRepository<OperationEntity, UUID>{
-
-	List<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type);
+	@Query("SELECT op FROM OperationEntity op  WHERE  op.type = :type AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)")
+	List<OperationEntity> findAllByTypeOrderByCreatedAtDesc(@Param("type") TypeOperation type);
 
 	Page<OperationEntity> findAllByTypeOrderByCreatedAtDesc(TypeOperation type, Pageable pageable);
 

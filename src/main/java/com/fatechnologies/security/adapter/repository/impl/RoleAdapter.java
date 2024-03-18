@@ -15,23 +15,23 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
-*<p>adaptateur des classes {@link RoleDto et RoleEntity}
-*
-* @author Assagou Fabrice 2022-03-06
-*/
+ * <p>adaptateur des classes {@link RoleDto et RoleEntity}
+ *
+ * @author Assagou Fabrice 2022-03-06
+ */
 @Repository
 @Transactional
 public class RoleAdapter implements RolePort {
-	
-	private final RoleJpa roleJpa;
+
+    private final RoleJpa roleJpa;
     private final RoleMapper roleMapper;
     private final AuthorityMapper authorityMapper;
 
-	public RoleAdapter(RoleJpa roleJpa) {
-		this.roleJpa = roleJpa;
-        roleMapper =RoleMapper.INSTANCE;
+    public RoleAdapter(RoleJpa roleJpa) {
+        this.roleJpa = roleJpa;
+        roleMapper = RoleMapper.INSTANCE;
         authorityMapper = AuthorityMapper.INSTANCE;
-	}
+    }
 
 
     @Override
@@ -59,8 +59,8 @@ public class RoleAdapter implements RolePort {
 
         roles.forEach(role -> {
             var dto = roleMapper.modelToDto(role);
-           var authDtos = new ArrayList<AuthorityDto>();
-            if(!role.getAuthorities().isEmpty()){
+            var authDtos = new ArrayList<AuthorityDto>();
+            if (!role.getAuthorities().isEmpty()) {
                 role.getAuthorities().forEach(authority -> {
                     var auth = authorityMapper.modelToDto(authority);
                     authDtos.add(auth);

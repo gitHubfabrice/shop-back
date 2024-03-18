@@ -53,6 +53,11 @@ public class TransactionController {
 		transactionService.saveMoney(data);
 	}
 
+	@PutMapping(value = "/benefit-to-bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void benefitToBank(@RequestBody TransactionDto data) {
+		transactionService.save(data);
+	}
+
 	@PutMapping(value = "/checking/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void checking(@PathVariable("id") UUID id) {
 		transactionService.checkingTransaction(id);

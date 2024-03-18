@@ -21,47 +21,45 @@ import java.util.UUID;
 @Setter
 
 public class OperationController {
-	private Logger log = LoggerFactory.getLogger(OperationController.class);
+    private Logger log = LoggerFactory.getLogger(OperationController.class);
 
-	@Autowired
-	private OperationService operationService;
+    @Autowired
+    private OperationService operationService;
 
-	@GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OperationDto> getById(@PathVariable("id") UUID id) {
-		var dtos = operationService.getById(id);
-		return ResponseEntity.ok().body(dtos);
-	}
+    @GetMapping(value = "/get-by-id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OperationDto> getById(@PathVariable("id") UUID id) {
+        var dtos = operationService.getById(id);
+        return ResponseEntity.ok().body(dtos);
+    }
 
-	@PostMapping(value = "/in-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void inStock(@RequestBody OperationDto data) {
-		operationService.inStock(data);
-	}
-	
-	@PutMapping(value = "/out-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void outStock(@RequestBody OperationDto data) {
-		operationService.outStock(data);
-	}
+    @PostMapping(value = "/in-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void inStock(@RequestBody OperationDto data) {
+        operationService.inStock(data);
+    }
 
-
-
-	@GetMapping(value = "/get-all-in", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<OperationDto>> getAllIn() {
-		List<OperationDto> dtos = operationService.getAllInStockHistory();
-		return ResponseEntity.ok().body(dtos);
-	}
+    @PutMapping(value = "/out-stock", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void outStock(@RequestBody OperationDto data) {
+        operationService.outStock(data);
+    }
 
 
-	@GetMapping(value = "/get-all-out", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<OperationDto>> getAllOut() {
-		List<OperationDto> dtos = operationService.getAllOutStockHistory();
-		return ResponseEntity.ok().body(dtos);
-	}
+    @GetMapping(value = "/get-all-in", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OperationDto>> getAllIn() {
+        List<OperationDto> dtos = operationService.getAllInStockHistory();
+        return ResponseEntity.ok().body(dtos);
+    }
 
-	@GetMapping(value = "/get-benefice", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<Object, Object>> getBenefice() {
-		var  dtos = operationService.getBenefice();
-		return ResponseEntity.ok().body(dtos);
-	}
+    @GetMapping(value = "/get-all-out", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OperationDto>> getAllOut() {
+        List<OperationDto> dtos = operationService.getAllOutStockHistory();
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping(value = "/get-benefice", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Object, Object>> getBenefice() {
+        var dtos = operationService.getBenefice();
+        return ResponseEntity.ok().body(dtos);
+    }
 
 
 	/*@GetMapping(value = "/get-all-out", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,9 +68,9 @@ public class OperationController {
 		return ResponseEntity.ok().body(dtos);
 	}*/
 
-	@DeleteMapping(value = "/delete/{id}")
-	public void delete(@PathVariable("id") UUID id) {
-		operationService.delete(id);
-	}
-	
+    @DeleteMapping(value = "/delete/{id}")
+    public void delete(@PathVariable("id") UUID id) {
+        operationService.delete(id);
+    }
+
 }

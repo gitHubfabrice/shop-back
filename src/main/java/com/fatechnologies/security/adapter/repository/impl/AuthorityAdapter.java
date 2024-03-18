@@ -48,7 +48,6 @@ public class AuthorityAdapter implements AuthorityPort {
     @Override
     public List<AuthorityDto> getAll() {
         var authorities = authorityJpa.findAll();
-        var dTos = authorityMapper.modelsToDtos(authorities);
-        return dTos;
+        return authorityMapper.modelsToDtos(authorities);
     }
 }
