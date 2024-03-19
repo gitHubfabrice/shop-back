@@ -14,7 +14,8 @@ import java.util.UUID;
 public interface TransactionRepository extends JpaRepository<TransactionEntity, UUID>{
 
     List<TransactionEntity> findAllByStatus(boolean status);
-    @Query("Select t From TransactionEntity t Where t.nature = com.fatechnologies.domaine.dto.TypeTransaction.DEBIT")
+    @Query("Select t From TransactionEntity t Where t.nature = com.fatechnologies.domaine.dto.TypeTransaction.DEBIT " +
+            "And Year(t.createdAt) = Year(CURRENT_DATE)")
     List<TransactionEntity> findAllDebit();
     @Query("Select t From TransactionEntity t Where t.nature = com.fatechnologies.domaine.dto.TypeTransaction.CREDIT And t.direct = :direct")
     List<TransactionEntity> findAllCredit(@Param("direct") boolean direct);
